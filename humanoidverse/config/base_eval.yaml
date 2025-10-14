@@ -1,0 +1,22 @@
+eval_timestamp: ${now:%Y%m%d_%H%M%S}
+eval_name: TEST
+eval_log_dir: logs_eval/${eval_name}/${eval_timestamp}
+hydra:
+  run:
+    dir: ${eval_log_dir}
+simulator:
+  _target_: humanoidverse.simulator.isaacgym.isaacgym.IsaacGym
+checkpoint: "/data/zxlei/embodied/humanoid/ASAP/logs/ckpt_serial/genesis2gym/20250911_235428-jump_forward_level3_--gen_to_gym--_gym-motion_tracking-g1_29dof_anneal_23dof/model_10000.pt"
+headless: False
+num_envs: 1
+eval: False
+algo:
+  config:
+    eval_callbacks:
+      analysis_plot_cb:
+        _target_: humanoidverse.agents.callbacks.analysis_plot_motion_tracking.AnalysisPlotMotionTracking
+        config:
+          sim_dt: 0.02
+          log_single_robot: False
+          plot_update_interval: 100
+          compute_metrics: True

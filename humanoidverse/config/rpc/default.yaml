@@ -1,0 +1,12 @@
+# config/rpc/default.yaml
+master_addr: "127.0.0.1"
+master_port: "29550"
+client_name: "ppo_trainer"
+server_names: 
+  - "isaacsim"
+  - "isaacgym"
+rank: 2
+world_size: 3
+client_gpu: 0
+server_gpu: 0
+timeout: 6000

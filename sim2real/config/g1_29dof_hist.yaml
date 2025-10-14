@@ -1,0 +1,576 @@
+ROBOT_TYPE: 'g1_29dof' # Robot name, "go2", "b2", "b2w", "h1", "go2w", "g1" 
+ROBOT_SCENE: "../humanoidverse/data/robots/g1/scene_29dof.xml" # Robot scene, for Sim2Sim
+# ROBOT_SCENE: "../humanoidverse/data/robots/g1/scene_29dof_freebase.xml" # Robot scene, for Sim2Sim
+ROBOT: "../humanoidverse/data/robots/g1/g1_29dof.urdf" # Robot URDF file
+ASSET_ROOT: "../humanoidverse/data/robots/g1" # Robot Asset Root
+ASSET_FILE: "g1_29dof.urdf" # Robot Asset File
+# ASSET_FILE: "g1_29dof_freebase.urdf" # Robot Asset File
+### REAL
+DOMAIN_ID: 0 # Domain id
+# Interface
+INTERFACE: "lo" # Yuanhang: in simulation, lo0 for mac, lo for linux
+
+## SIM
+# DOMAIN_ID: 0 # Domain id
+# # Interface
+# INTERFACE: "lo" # Yuanhang: in simulation, lo0 for mac, lo for linux
+
+USE_JOYSTICK: 0 # Simulate Unitree WirelessController using a gamepad (0: disable, 1: enable)
+JOYSTICK_TYPE: "xbox" # support "xbox" and "switch" gamepad layout
+JOYSTICK_DEVICE: 0 # Joystick number
+
+FREE_BASE: False
+
+PRINT_SCENE_INFORMATION: True # Print link, joint and sensors information of robot
+ENABLE_ELASTIC_BAND: True # Virtual spring band, used for lifting h1
+
+SIMULATE_DT: 0.005  # Need to be larger than the runtime of viewer.sync()
+VIEWER_DT: 0.02  # Viewer update time
+USE_SENSOR: False
+USE_HISTORY: True
+USE_HISTORY_LOCO: True
+USE_HISTORY_MIMIC: True
+
+GAIT_PERIOD: 0.9 # 1.25
+
+MOTOR2JOINT: [0, 1, 2, 3, 4, 5,
+              6, 7, 8, 9, 10, 11,
+              12, 13, 14, 
+              15, 16, 17, 18, 19, 20, 21, 
+              22, 23, 24, 25, 26, 27, 28]
+            
+JOINT2MOTOR: [0, 1, 2, 3, 4, 5,
+              6, 7, 8, 9, 10, 11,
+              12, 13, 14, 
+              15, 16, 17, 18, 19, 20, 21, 
+              22, 23, 24, 25, 26, 27, 28]
+            
+
+UNITREE_LEGGED_CONST:
+  HIGHLEVEL: 0xEE
+  LOWLEVEL: 0xFF
+  TRIGERLEVEL: 0xF0
+  PosStopF: 2146000000.0
+  VelStopF: 16000.0
+  MODE_MACHINE: 5
+  MODE_PR:  0
+
+JOINT_KP: [
+    100, 100, 100, 200, 20, 20,
+    100, 100, 100, 200, 20, 20,
+    400, 400, 400,
+    90, 60, 20, 60, 4, 4, 0,
+    90, 60, 20, 60, 4, 4, 4
+]
+
+JOINT_KD: [
+   2.5, 2.5, 2.5, 5, 0.2, 0.1,
+   2.5, 2.5, 2.5, 5, 0.2, 0.1,
+   5.0, 5.0, 5.0,
+   2.0, 1.0, 0.4, 1.0, 0.2, 0.2, 0.2,
+    2.0, 1.0, 0.4, 1.0, 0.2, 0.2, 0.2
+]
+
+MOTOR_KP: [
+    100, 100, 100, 200, 20, 20,
+    100, 100, 100, 200, 20, 20,
+    400, 400, 400,
+    90, 60, 20, 60, 4, 4, 0,
+    90, 60, 20, 60, 4, 4, 4
+]
+
+MOTOR_KD: [
+   2.5, 2.5, 2.5, 5, 0.2, 0.1,
+   2.5, 2.5, 2.5, 5, 0.2, 0.1,
+   5.0, 5.0, 5.0,
+   2.0, 1.0, 0.4, 1.0, 0.2, 0.2, 0.2,
+    2.0, 1.0, 0.4, 1.0, 0.2, 0.2, 0.2
+]
+
+WeakMotorJointIndex:
+  left_hip_yaw_joint: 0
+  left_hip_roll_joint: 1
+  left_hip_pitch_joint: 2
+  left_knee_joint: 3
+  left_ankle_pitch_joint: 4
+  left_ankle_roll_joint: 5
+  right_hip_yaw_joint: 6
+  right_hip_roll_joint: 7
+  right_hip_pitch_joint: 8
+  right_knee_joint: 9
+  right_ankle_pitch_joint: 10
+  right_ankle_roll_joint: 11
+  waist_yaw_joint : 12
+  waist_roll_joint : 13
+  waist_pitch_joint : 14
+  left_shoulder_pitch_joint: 15
+  left_shoulder_roll_joint: 16
+  left_shoulder_yaw_joint: 17
+  left_elbow_joint: 18
+  left_wrist_roll_joint: 19
+  left_wrist_pitch_joint: 20
+  left_wrist_yaw_joint: 21
+  right_shoulder_pitch_joint: 22
+  right_shoulder_roll_joint: 23
+  right_shoulder_yaw_joint: 24
+  right_elbow_joint: 25
+  right_wrist_roll_joint: 26
+  right_wrist_pitch_joint: 27
+  right_wrist_yaw_joint: 28
+
+NUM_MOTORS: 29
+NUM_JOINTS: 29
+NUM_UPPER_BODY_JOINTS: 17
+
+DEFAULT_DOF_ANGLES: [
+    -0.1,  # left_hip_pitch_joint 
+    0.0,  # left_hip_roll_joint
+    0.0,  # left_hip_yaw_joint
+    0.3,  # left_knee_joint
+    -0.2, # left_ankle_pitch_joint
+    0.0,  # left_ankle_roll_joint
+    -0.1, # right_hip_pitch_joint
+    0.0,  # right_hip_roll_joint
+    0.0,  # right_hip_yaw_joint
+    0.3,  # right_knee_joint
+    -0.2, # right_ankle_pitch_joint
+    0.0,  # right_ankle_roll_joint
+    0.0,  # waist_yaw_joint
+    0.0,  # waist_roll_joint
+    0.0,  # waist_pitch_joint
+    0.0,  # left_shoulder_pitch_joint
+    0.0,  # left_shoulder_roll_joint
+    0.0,  # left_shoulder_yaw_joint
+    0.0,  # left_elbow_joint
+    0.0,  # left_wrist_roll_joint
+    0.0,  # left_wrist_pitch_joint
+    0.0,  # left_wrist_yaw_joint
+    0.0,  # right_shoulder_pitch_joint
+    0.0,  # right_shoulder_roll_joint
+    0.0,  # right_shoulder_yaw_joint
+    0.0,  # right_elbow_joint
+    0.0,  # right_wrist_roll_joint
+    0.0,  # right_wrist_pitch_joint
+    0.0   # right_wrist_yaw_joint
+]
+
+DEFAULT_MOTOR_ANGLES: [
+    -0.1,  # left_hip_pitch_joint 
+    0.0,  # left_hip_roll_joint
+    0.0,  # left_hip_yaw_joint
+    0.3,  # left_knee_joint
+    -0.2, # left_ankle_pitch_joint
+    0.0,  # left_ankle_roll_joint
+    -0.1, # right_hip_pitch_joint
+    0.0,  # right_hip_roll_joint
+    0.0,  # right_hip_yaw_joint
+    0.3,  # right_knee_joint
+    -0.2, # right_ankle_pitch_joint
+    0.0,  # right_ankle_roll_joint
+    0.0,  # waist_yaw_joint
+    0.0,  # waist_roll_joint
+    0.0,  # waist_pitch_joint
+    0.0,  # left_shoulder_pitch_joint
+    0.0,  # left_shoulder_roll_joint
+    0.0,  # left_shoulder_yaw_joint
+    0.0,  # left_elbow_joint
+    0.0,  # left_wrist_roll_joint
+    0.0,  # left_wrist_pitch_joint
+    0.0,  # left_wrist_yaw_joint
+    0.0,  # right_shoulder_pitch_joint
+    0.0,  # right_shoulder_roll_joint
+    0.0,  # right_shoulder_yaw_joint
+    0.0,  # right_elbow_joint
+    0.0,  # right_wrist_roll_joint
+    0.0,  # right_wrist_pitch_joint
+    0.0   # right_wrist_yaw_joint
+]
+
+motor_pos_lower_limit_list: [-2.5307, -0.5236, -2.7576, -0.087267, -0.87267, -0.2618, 
+                             -2.5307, -2.9671, -2.7576, -0.087267, -0.87267, -0.2618, 
+                             -2.618, -0.52, -0.52,
+                             -3.0892, -1.5882, -2.618, -1.0472, 
+                             -1.972222054, -1.61443, -1.61443,
+                             -3.0892, -2.2515, -2.618, -1.0472, 
+                             -1.972222054, -1.61443, -1.61443]
+motor_pos_upper_limit_list: [2.8798, 2.9671, 2.7576, 2.8798, 0.5236, 0.2618, 
+                            2.8798, 0.5236, 2.7576, 2.8798, 0.5236, 0.2618, 
+                            2.618, 0.52, 0.52,
+                            2.6704, 2.2515, 2.618, 2.0944, 
+                            1.972222054, 1.61443, 1.61443,
+                            2.6704, 1.5882, 2.618, 2.0944, 
+                            1.972222054, 1.61443, 1.61443]
+motor_vel_limit_list: [32.0, 32.0, 32.0, 20.0, 37.0, 37.0, 
+                      32.0, 32.0, 32.0, 20.0, 37.0, 37.0, 
+                      32.0, 37.0, 37.0, 
+                      37.0, 37.0, 37.0, 37.0, 
+                      37.0, 22.0, 22.0,
+                      37.0, 37.0, 37.0, 37.0, 
+                      37.0, 22.0, 22.0]
+motor_effort_limit_list: [88.0, 88.0, 88.0, 139.0, 50.0, 50.0, 
+                        88.0, 88.0, 88.0, 139.0, 50.0, 50.0, 
+                        88.0, 50.0, 50.0,
+                        25.0, 25.0, 25.0, 25.0, 
+                        25.0, 5.0, 5.0,
+                        25.0, 25.0, 25.0, 25.0, 
+                        25.0, 5.0, 5.0]
+history_config: {
+                  base_ang_vel: 4,
+                  projected_gravity: 4,
+                  command_lin_vel: 4,
+                  command_ang_vel: 4,
+                  command_base_height: 4,
+                  command_stand: 4,
+                  ref_upper_dof_pos: 4,
+                  dof_pos: 4,
+                  dof_vel: 4,
+                  actions: 4,
+                  # phase_time: 4,
+                  ref_motion_phase: 4,
+                  sin_phase: 4,
+                  cos_phase: 4
+                }
+history_loco_config: {
+                  base_ang_vel: 4,
+                  projected_gravity: 4,
+                  command_lin_vel: 4,
+                  command_ang_vel: 4,
+                  # command_base_height: 4,
+                  command_stand: 4,
+                  ref_upper_dof_pos: 4,
+                  dof_pos: 4,
+                  dof_vel: 4,
+                  actions: 4,
+                  # phase_time: 4,
+                  sin_phase: 4,
+                  cos_phase: 4
+                }
+history_loco_height_config: {
+                  base_ang_vel: 4,
+                  projected_gravity: 4,
+                  command_lin_vel: 4,
+                  command_ang_vel: 4,
+                  command_base_height: 4,
+                  command_stand: 4,
+                  ref_upper_dof_pos: 4,
+                  dof_pos: 4,
+                  dof_vel: 4,
+                  actions: 4,
+                  # phase_time: 4,
+                  sin_phase: 4,
+                  cos_phase: 4
+                }
+history_mimic_config: {
+                  base_ang_vel: 4,
+                  projected_gravity: 4,
+                  dof_pos: 4,
+                  dof_vel: 4,
+                  actions: 4,
+                  ref_motion_phase: 4,
+                }
+obs_dims: {
+            base_lin_vel: 3,
+            base_ang_vel: 3,
+            projected_gravity: 3,
+            command_lin_vel: 2,
+            command_ang_vel: 1,
+            command_stand: 1,
+            command_base_height: 1,
+            ref_upper_dof_pos: 17, # upper body actions
+            dof_pos: 29,
+            dof_vel: 29,
+            # actions: 12, # lower body actions
+            actions: 29, # full body actions
+            phase_time: 1,
+            ref_motion_phase: 1, # mimic motion phase
+            sin_phase: 1,
+            cos_phase: 1,
+          }
+obs_loco_dims: {
+            base_lin_vel: 3,
+            base_ang_vel: 3,
+            projected_gravity: 3,
+            command_lin_vel: 2,
+            command_ang_vel: 1,
+            command_stand: 1,
+            command_base_height: 1,
+            ref_upper_dof_pos: 17, # upper body actions
+            dof_pos: 29,
+            dof_vel: 29,
+            actions: 12, # lower body actions
+            phase_time: 1,
+            sin_phase: 1,
+            cos_phase: 1,
+          }
+obs_mimic_dims: {
+            base_lin_vel: 3,
+            base_ang_vel: 3,
+            projected_gravity: 3,
+            dof_pos: 29,
+            dof_vel: 29,
+            actions: 29, # full body actions
+            ref_motion_phase: 1, # mimic motion phase
+          }
+obs_scales: {
+    base_lin_vel: 2.0,
+    base_ang_vel: 0.25,
+    projected_gravity: 1.0,
+    command_lin_vel: 1,
+    command_ang_vel: 1,
+    command_stand: 1,
+    command_base_height: 2, # Yuanhang: it's 2, not 1!
+    ref_upper_dof_pos: 1.0,
+    dof_pos: 1.0,
+    dof_vel: 0.05,
+    history: 1.0,
+    history_loco: 1.0,
+    history_mimic: 1.0,
+    actions: 1.0,
+    phase_time: 1.0,
+    ref_motion_phase: 1.0,
+    sin_phase: 1.0,
+    cos_phase: 1.0
+  }
+
+loco_upper_body_dof_pos: [
+  0.0, 0.0, 0.0, # waist
+  0.0, 0.3, 0.0, 1.0, # left shoulder and elbow
+  0.0, 0.0, 0.0, # left wrist
+  0.0, -0.3, 0.0, 1.0, # right shoulder and elbow
+  0.0, 0.0, 0.0 # right wrist
+]
+
+robot_dofs: {
+  "g1_29dof": [1, 1, 1, 1, 1, 1, 
+               1, 1, 1, 1, 1, 1,
+               1, 1, 1,
+               1, 1, 1, 1, 1, 1, 1,
+               1, 1, 1, 1, 1, 1, 1],
+  "g1_29dof_anneal_23dof": [1, 1, 1, 1, 1, 1, 
+                            1, 1, 1, 1, 1, 1,
+                            1, 1, 1,
+                            1, 1, 1, 1, 0, 0, 0,
+                            1, 1, 1, 1, 0, 0, 0],
+}
+
+mimic_robot_types: {
+  # "lift_up": "g1_29dof",
+
+  # "APT_level1": "g1_29dof_anneal_23dof",
+  # "single_foot_balance_level3": "g1_29dof_anneal_23dof",
+
+  "CR7_level1": "g1_29dof_anneal_23dof",
+
+
+  "jump_forward_level1": "g1_29dof_anneal_23dof",
+  "jump_forward_level2": "g1_29dof_anneal_23dof",
+  "jump_forward_level3": "g1_29dof_anneal_23dof",
+
+
+  "kick_level1": "g1_29dof_anneal_23dof",
+  "kick_level2": "g1_29dof_anneal_23dof",
+  "kick_level3": "g1_29dof_anneal_23dof",
+
+
+
+  "Kobe_level1": "g1_29dof_anneal_23dof",
+
+
+
+  "lebron_level1": "g1_29dof_anneal_23dof",
+  "lebron_level2": "g1_29dof_anneal_23dof",
+
+
+
+
+  "side_jump_level1": "g1_29dof_anneal_23dof",
+  "side_jump_level2": "g1_29dof_anneal_23dof",
+  "side_jump_level3": "g1_29dof_anneal_23dof",
+
+
+
+}
+
+mimic_models: {
+  # "single_foot_balance_level3": "model_11600.onnx",
+  # "APT_level1": "model_176500.onnx",
+  # "CR7_level1": "model_191500.onnx",
+  "CR7_level1": "model_84700.onnx",
+
+  # "jump_forward_level1": "model_191500.onnx",
+  # "jump_forward_level2": "model_130500.onnx",
+  # "jump_forward_level3": "model_149000.onnx",
+
+  # "kick_level1": "model_168000.onnx",
+  # "kick_level2": "model_293000.onnx",
+  # "kick_level3": "model_240000.onnx",
+  # "kick_level3": "model_36200.onnx",
+
+  # "Kobe_level1": "model_34300.onnx",
+  # "Kobe_level1": "model_84700.onnx",
+  # "lebron_level1": "model_233500.onnx",
+  # "lebron_level2": "model_190000.onnx",
+
+  # "side_jump_level1": "model_135000.onnx",
+  # "side_jump_level2": "model_131500.onnx",
+  # "side_jump_level3": "model_245000.onnx",
+ 
+}
+
+
+
+start_upper_body_dof_pos: {
+  "lift_up": 
+  [
+    0.0, 0.0, 0.0, # waist
+    0.0, 0.0, 0.0, 0.0, # left shoulder and elbow
+    0.0, 0.0, 0.0, # left wrist
+    0.0, 0.0, 0.0, 0.0, # right shoulder and elbow
+    0.0, 0.0, 0.0 # right wrist
+  ],
+
+  "APT_level1":
+  [0.19964170455932617, 0.07710712403059006, -0.2882401943206787, 
+  0.21672365069389343, 0.15629297494888306, -0.5167576670646667, 0.5782126784324646,
+  0.0, 0.0, 0.0, 
+  0.25740593671798706, -0.2504104673862457, 0.22500675916671753, 0.5127624273300171,
+  0.0, 0.0, 0.0],
+
+  "single_foot_balance_level3":
+  [0.30520668625831604, 0.060712847858667374, -0.2506754398345947, 
+  0.09942447394132614, 0.3964673578739166, -0.5988779067993164, 0.9304576516151428, 
+  -0.13132517039775848, 0.11256328225135803, -0.08899586647748947, 
+  0.08612339198589325, -0.34242063760757446, 0.9363580942153931, 0.8870665431022644, 
+  0.14658823609352112, 0.10302004218101501, 0.07819974422454834],
+
+  "CR7_level1":
+  [0.20492185652256012, -0.1423935443162918, -0.5196797847747803, 
+  0.37753403186798096, 0.4606001079082489, -0.4165497124195099, 0.7984108328819275, 
+  -0.09108904749155045, 0.0742582231760025, -0.10187414288520813, 
+  0.24138350784778595, -0.35501086711883545, 0.29590970277786255, 0.9259377717971802, 
+  0.0897110104560852, 0.05953628197312355, 0.07013951241970062],
+
+  
+  "jump_forward_level1":
+  [0.045097291469573975, 0.11042889207601547, 0.3541450500488281, 
+  -0.2664448320865631, 0.3803804814815521, -0.6423313021659851, 0.49415290355682373, 
+  -0.10539000481367111, 0.007053654175251722, -0.14895562827587128, 
+  -0.27388593554496765, -0.39011114835739136, 0.8009459376335144, 0.5996906757354736, 
+  0.11178041994571686, 0.05555077642202377, 0.07856782525777817
+  ],
+  "jump_forward_level2":
+  [-0.02629547007381916, 0.1044258326292038, -0.1473666876554489, 
+  -0.1183449923992157, 0.36613816022872925, -0.6658874750137329, 0.40353667736053467, 
+  -0.07663311809301376, 0.06474557518959045, -0.17684072256088257, 
+  -0.11432900279760361, -0.3693147599697113, 0.7502599358558655, 0.5612908005714417, 
+  0.09098311513662338, 0.07041975110769272, 0.06370417028665543
+  ],
+  "jump_forward_level3":
+  [0.11907759308815002, -0.06782753765583038, -0.21148236095905304, 
+  -0.058593880385160446, 0.43644383549690247, -0.6755354404449463, 0.44049447774887085, 
+  -0.04251262918114662, 0.13801896572113037, -0.1174311712384224, 
+  -0.01156798005104065, -0.3377457857131958, 0.781288743019104, 0.6981821060180664, 
+  0.0764324739575386, 0.12200646847486496, 0.04586487635970116],
+
+
+  "kick_level1":
+  [0.19334529340267181, 0.26476186513900757, 0.5068590044975281, 
+  -0.04159656539559364, 0.31694212555885315, -0.409045934677124, 0.9198440313339233, 
+  -0.10894529521465302, 0.09830385446548462, -0.05800680071115494, 
+  -0.11400521546602249, -0.49378490447998047, 0.7578608989715576, 0.8474284410476685, 
+  0.11998694390058517, 0.08877772092819214, 0.042023640125989914],
+  "kick_level2":
+  [0.2032628059387207, 0.182508185505867, -0.22833460569381714, 
+  0.13038116693496704, 0.4297596514225006, -0.529277503490448, 0.8634122610092163, 
+  -0.11945795267820358, 0.11040791124105453, -0.07355817407369614, 
+  0.07790787518024445, -0.3819763660430908, 0.8852471709251404, 0.7682194113731384, 
+  0.12353815883398056, 0.08070569485425949, 0.03553816303610802],
+  "kick_level3":
+  [0.30520668625831604, 0.060712847858667374, -0.2506754398345947, 
+  0.09942447394132614, 0.3964673578739166, -0.5988779067993164, 0.9304576516151428, 
+  -0.13132517039775848, 0.11256328225135803, -0.08899586647748947, 
+  0.08612339198589325, -0.34242063760757446, 0.9363580942153931, 0.8870665431022644, 
+  0.14658823609352112, 0.10302004218101501, 0.07819974422454834],
+
+  "Kobe_level1": [0.15386541187763214, 0.0628226026892662, -0.11425045132637024, 
+  0.07208488881587982, 0.12677930295467377, -0.44947248697280884, 0.6861862540245056,
+  0.0, 0.0, 0.0,
+  0.06033417582511902, -0.32518187165260315, 0.18433918058872223, 0.6882569193840027,
+  0.0, 0.0, 0.0],
+
+
+  
+
+  "lebron_level1":
+  [0.28927478194236755, -0.0427047424018383, 0.3137834072113037, 
+  -0.032295625656843185, 0.44610559940338135, -0.35555368661880493, 1.0250558853149414, 
+  -0.14073072373867035, 0.12496963888406754, -0.11963929235935211, 
+  -0.03556990623474121, -0.3175228536128998, 0.4563574194908142, 1.0163283348083496, 
+  0.132579043507576, 0.130295991897583, 0.1369185745716095],
+  "lebron_level2":
+  [0.26498958468437195, 0.004183614160865545, 0.3286237120628357, 
+  -0.1047021895647049, 0.4793112874031067, -0.3610142767429352, 0.8710411787033081, 
+  -0.10773038119077682, 0.13804234564304352, -0.09281636774539948, 
+  -0.11720383167266846, -0.34526848793029785, 0.7066057920455933, 0.7991378903388977, 
+  0.10698656737804413, 0.12937703728675842, 0.11009333282709122],
+
+
+
+
+  "side_jump_level1":
+  [0.15126359462738037, 0.0714510902762413, -0.5199999809265137, 
+  0.3450615108013153, 0.34631121158599854, -0.4137703478336334, 0.639528751373291, 
+  -0.0391659215092659, 0.12899728119373322, -0.04680430516600609, 
+  0.23275026679039001, -0.34249043464660645, 0.4032745659351349, 0.7589754462242126, 
+  0.04312089830636978, 0.07626685500144958, 0.01097512524574995],
+
+  "side_jump_level2":
+  [ 0.20148296654224396, 0.07717499136924744, -0.21546435356140137, 
+  0.1704193353652954, 0.33506959676742554, -0.3543175458908081, 0.3222774267196655, 
+  -0.019805945456027985, 0.13857758045196533, -0.1175633892416954, 
+  0.07796253263950348, -0.3726571798324585, 0.3958783745765686, 0.4751143455505371, 
+  0.020584601908922195, 0.10585267841815948, 0.03447344899177551
+  ],
+  "side_jump_level3":
+  [0.2192986011505127, 8.261951734311879e-05, -0.21791237592697144, 
+  0.022316448390483856, 0.2905949652194977, -0.36345407366752625, 0.233949676156044, 
+  -0.011479750275611877, 0.11892618983983994, -0.1468876451253891, 
+  -0.11076739430427551, -0.33399146795272827, 0.3532547652721405, 0.3134865164756775, 
+  0.007447139825671911, 0.10121755301952362, 0.05996187403798103
+  ],
+
+
+
+
+}
+
+motion_length_s: {
+  "lift_up": 11.067,
+
+  "APT_level1": 7.66,
+
+
+  "CR7_level1": 3.967,
+
+  "jump_forward_level1": 3.76,
+  "jump_forward_level2": 3.56,
+  "jump_forward_level3": 4.26,
+
+
+  "kick_level1": 3.96,
+  "kick_level2": 3.36,
+  "kick_level3": 4.56,
+
+
+  "lebron_level1": 5.067,
+  "lebron_level2": 6.967,
+
+  "Kobe_level1": 4.16,
+
+
+  "side_jump_level1": 3.06,
+  "side_jump_level2": 3.56,
+  "side_jump_level3": 3.66,
+
+  "single_foot_balance_level3": 10.0,
+}

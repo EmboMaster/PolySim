@@ -1,0 +1,28 @@
+2025-08-25 13:13:46.228 | INFO     | __main__:main:80 - Loading training config file from /home/embodied/data/zxlei/embodied/humanoid/ASAP/logs/MotionTracking/lab_gym_0820/config.yaml
+2025-08-25 13:13:47.199 | INFO     | humanoidverse.utils.helpers:pre_process_config:44 - obs_dims: {'base_lin_vel': 3, 'base_ang_vel': 3, 'projected_gravity': 3, 'dof_pos': 23, 'dof_vel': 23, 'actions': 23, 'dif_local_rigid_body_pos': 81, 'local_ref_rigid_body_pos': 81, 'ref_motion_phase': 1}
+2025-08-25 13:13:47.203 | INFO     | humanoidverse.utils.helpers:pre_process_config:51 - auxiliary_obs_dims: {'history_actor': 304, 'history_critic': 316}
+2025-08-25 13:13:47.204 | INFO     | humanoidverse.utils.helpers:pre_process_config:58 - actor_obs: base_ang_vel has dim: 3
+2025-08-25 13:13:47.204 | INFO     | humanoidverse.utils.helpers:pre_process_config:58 - actor_obs: projected_gravity has dim: 3
+2025-08-25 13:13:47.205 | INFO     | humanoidverse.utils.helpers:pre_process_config:58 - actor_obs: dof_pos has dim: 23
+2025-08-25 13:13:47.205 | INFO     | humanoidverse.utils.helpers:pre_process_config:58 - actor_obs: dof_vel has dim: 23
+2025-08-25 13:13:47.206 | INFO     | humanoidverse.utils.helpers:pre_process_config:58 - actor_obs: actions has dim: 23
+2025-08-25 13:13:47.206 | INFO     | humanoidverse.utils.helpers:pre_process_config:58 - actor_obs: ref_motion_phase has dim: 1
+2025-08-25 13:13:47.207 | INFO     | humanoidverse.utils.helpers:pre_process_config:61 - actor_obs: history_actor has dim: 304
+2025-08-25 13:13:47.207 | INFO     | humanoidverse.utils.helpers:pre_process_config:58 - critic_obs: base_lin_vel has dim: 3
+2025-08-25 13:13:47.208 | INFO     | humanoidverse.utils.helpers:pre_process_config:58 - critic_obs: base_ang_vel has dim: 3
+2025-08-25 13:13:47.208 | INFO     | humanoidverse.utils.helpers:pre_process_config:58 - critic_obs: projected_gravity has dim: 3
+2025-08-25 13:13:47.209 | INFO     | humanoidverse.utils.helpers:pre_process_config:58 - critic_obs: dof_pos has dim: 23
+2025-08-25 13:13:47.209 | INFO     | humanoidverse.utils.helpers:pre_process_config:58 - critic_obs: dof_vel has dim: 23
+2025-08-25 13:13:47.210 | INFO     | humanoidverse.utils.helpers:pre_process_config:58 - critic_obs: actions has dim: 23
+2025-08-25 13:13:47.211 | INFO     | humanoidverse.utils.helpers:pre_process_config:58 - critic_obs: ref_motion_phase has dim: 1
+2025-08-25 13:13:47.211 | INFO     | humanoidverse.utils.helpers:pre_process_config:58 - critic_obs: dif_local_rigid_body_pos has dim: 81
+2025-08-25 13:13:47.212 | INFO     | humanoidverse.utils.helpers:pre_process_config:58 - critic_obs: local_ref_rigid_body_pos has dim: 81
+2025-08-25 13:13:47.212 | INFO     | humanoidverse.utils.helpers:pre_process_config:61 - critic_obs: history_critic has dim: 316
+2025-08-25 13:13:47.213 | INFO     | humanoidverse.utils.helpers:pre_process_config:63 - algo_obs_dim_dict: {'actor_obs': 380, 'critic_obs': 557}
+2025-08-25 13:13:47.213 | DEBUG    | humanoidverse.utils.helpers:pre_process_config:73 - PPO CONFIG
+2025-08-25 13:13:47.213 | DEBUG    | humanoidverse.utils.helpers:pre_process_config:74 - {'actor': {'input_dim': ['actor_obs'], 'output_dim': ['robot_action_dim'], 'layer_config': {'type': 'MLP', 'hidden_dims': [512, 256, 128], 'activation': 'ELU'}}, 'critic': {'type': 'MLP', 'input_dim': ['critic_obs'], 'output_dim': [1], 'layer_config': {'type': 'MLP', 'hidden_dims': [512, 256, 128], 'activation': 'ELU'}}}
+2025-08-25 13:13:47.214 | INFO     | __main__:main:144 - Saving eval logs to logs_eval/TEST/20250825_131347
+2025-08-25 13:13:48.530 | INFO     | humanoidverse.utils.motion_lib.torch_humanoid_batch:<module>:41 - Using Humanoid Batch
+2025-08-25 13:13:48.581 | INFO     | humanoidverse.simulator.mujoco.mujoco:setup:67 - MuJoCo simulator setup with dt=0.005
+2025-08-25 13:13:48.582 | INFO     | humanoidverse.simulator.mujoco.mujoco:setup_terrain:80 - Plane terrain will be loaded from XML file
+2025-08-25 13:13:48.583 | INFO     | humanoidverse.simulator.mujoco.mujoco:load_assets:112 - Loading MuJoCo model from: humanoidverse/data/robots/g1/g1_29dof_anneal_23dof.xml

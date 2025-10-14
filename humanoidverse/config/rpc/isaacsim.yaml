@@ -1,0 +1,8 @@
+name: isaacsim
+client_name: ppo_trainer
+rank: 1
+world_size: 4
+master_addr: 127.0.0.1
+master_port: "29550"
+server_gpu: 1
+client_gpu: 1

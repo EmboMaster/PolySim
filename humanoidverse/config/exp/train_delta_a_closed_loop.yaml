@@ -1,0 +1,7 @@
+# @package _global_
+
+defaults:
+  - /algo: ppo_train_delta_a
+  - /env: delta_a_closed_loop
+
+experiment_name: Use_Delta_A_for_Finetuning

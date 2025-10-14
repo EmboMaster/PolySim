@@ -1,0 +1,16 @@
+eval_timestamp: ${now:%Y%m%d_%H%M%S}
+eval_name: TEST
+eval_log_dir: logs_eval/${eval_name}/${eval_timestamp}
+simulator:
+  _target_: humanoidverse.simulator.mujoco.mujoco.MuJoCo
+checkpoint: /home/embodied/data/zxlei/embodied/humanoid/ASAP/logs/MotionTracking/lab_gym_0820/model_9100.pt
+algo:
+  config:
+    eval_callbacks:
+      analysis_plot_cb:
+        _target_: humanoidverse.agents.callbacks.analysis_plot_motion_tracking.AnalysisPlotMotionTracking
+        config:
+          sim_dt: 0.02
+          log_single_robot: false
+          plot_update_interval: 100
+          compute_metrics: true

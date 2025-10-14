@@ -1,0 +1,6 @@
+eval_timestamp: ${now:%Y%m%d_%H%M%S}
+eval_name: TEST
+eval_log_dir: logs_eval/${eval_name}/${eval_timestamp}
+simulator:
+  _target_: humanoidverse.simulator.isaacgym.IsaacGym
+checkpoint: /home/embodied/data/zxlei/embodied/humanoid/ASAP/sim2real/models/test/CR7_level1/model_9100.pt

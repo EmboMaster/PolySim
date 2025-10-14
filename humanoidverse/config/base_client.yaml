@@ -1,0 +1,41 @@
+# config/minimal_test.yaml  
+defaults:
+  - _self_
+
+# 最小配置
+num_envs: 12288
+num_envs_list: [4096,4096,4096]
+device: "cuda:0"
+max_episode_length : 1000
+max_episode_length_s : 20
+# 最小robot配置
+robot:
+  policy_obs_dim: 380
+  critic_obs_dim: 557  
+  actions_dim: 23
+  foot_name: "foot"
+  knee_name: "knee"
+  penalize_contacts_on: []
+  terminate_after_contacts_on: []
+  has_upper_body_dof: false
+  has_torso: false
+  algo_obs_dim_dict: {'actor_obs': 380, 'critic_obs': 557}
+  
+  init_state:
+    pos: [0.0, 0.0, 1.0]
+    rot: [0.0, 0.0, 0.0, 1.0] 
+    lin_vel: [0.0, 0.0, 0.0]
+    ang_vel: [0.0, 0.0, 0.0]
+
+# RPC配置
+rpc:
+  master_addr: "127.0.0.1"
+  master_port: "29550"
+  client_name: "ppo_trainer"
+  server_names: [ "isaacgym","isaacsim", "genesis"]
+  rank: 3
+  world_size: 4
+  client_gpu: 0
+  server_gpu: 0
+  server_gpu_list: [0,0,0]
+  timeout: 6000

@@ -1,0 +1,77 @@
+# @package _global_
+
+# Env structure
+simulator:
+  _target_: humanoidverse.simulator.maniskill.maniskill.ManiSkill
+  _recursive_: False
+  config:
+    name: "maniskill"
+    terrain: ${terrain}
+    plane:
+        static_friction: 1.0
+        dynamic_friction: 1.0
+        restitution: 0.0
+    sim:
+      fps: 200
+      control_decimation: 4
+      substeps: 1
+      gravity: [0.0, 0.0, -9.81]
+      solver_iterations: 4
+      solver_velocity_iterations: 1
+      render_mode: "human" # [None, "human", "rgb_array"]
+      render_interval: 4
+    
+    scene:
+      num_envs: ${num_envs}
+      env_spacing: ${env.config.env_spacing}
+      replicate_physics: True
+    
+    # G1人形机器人特定配置
+    robot:
+      robot_type: "g1_humanoid"
+      asset_path: "humanoidverse/data/robots/g1/g1_29dof_anneal_23dof.urdf"  # G1的URDF文件路径
+      
+    # 人形机器人运动跟踪任务配置
+    task:
+      task_name: "HumanoidLocomotion-v1"  # 自定义任务名称
+      control_mode: "pd_joint_pos"  # 关节位置控制，适合人形机器人
+      obs_mode: "state"  # 状态观察
+      reward_mode: "dense"  # 密集奖励
+      
+    # G1机器人关节配置
+    g1_config:
+      num_dof: 23  # G1的实际关节数量
+      joint_names: [
+        "left_hip_pitch_joint", "left_hip_roll_joint", "left_hip_yaw_joint", "left_knee_joint", "left_ankle_pitch_joint", "left_ankle_roll_joint",
+        "right_hip_pitch_joint", "right_hip_roll_joint", "right_hip_yaw_joint", "right_knee_joint", "right_ankle_pitch_joint", "right_ankle_roll_joint",
+        "waist_yaw_joint", "waist_roll_joint", "waist_pitch_joint",
+        "left_shoulder_pitch_joint", "left_shoulder_roll_joint", "left_shoulder_yaw_joint", "left_elbow_joint",
+        "right_shoulder_pitch_joint", "right_shoulder_roll_joint", "right_shoulder_yaw_joint", "right_elbow_joint"
+      ]
+      body_names: [
+        "pelvis", 
+        "left_hip_pitch_link", "left_hip_roll_link", "left_hip_yaw_link", "left_knee_link", "left_ankle_pitch_link", "left_ankle_roll_link",
+        "right_hip_pitch_link", "right_hip_roll_link", "right_hip_yaw_link", "right_knee_link", "right_ankle_pitch_link", "right_ankle_roll_link",
+        "waist_yaw_link", "waist_roll_link", "torso_link",
+        "left_shoulder_pitch_link", "left_shoulder_roll_link", "left_shoulder_yaw_link", "left_elbow_link",
+        "right_shoulder_pitch_link", "right_shoulder_roll_link", "right_shoulder_yaw_link", "right_elbow_link"
+      ]
+      base_name: "pelvis"
+      foot_name: "ankle_roll_link"
+      knee_name: "knee_link"
+      torso_name: "torso_link"
+      
+    # 环境配置
+    env:
+      max_episode_steps: 1000
+      action_scale: 1.0
+      reward_scale: 1.0
+      
+    # 域随机化配置
+    domain_rand:
+      randomize_friction: true
+      friction_range: [0.5, 1.5]
+      randomize_mass: true
+      mass_range: [0.8, 1.2]
+      randomize_com: true
+      com_range: [-0.1, 0.1]

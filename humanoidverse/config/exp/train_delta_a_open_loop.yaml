@@ -1,0 +1,7 @@
+# @package _global_
+
+defaults:
+  - /algo: ppo
+  - /env: delta_a_open_loop
+
+experiment_name: Train_Delta_A

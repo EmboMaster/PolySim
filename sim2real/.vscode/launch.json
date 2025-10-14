@@ -1,0 +1,31 @@
+{
+    // 使用 IntelliSense 了解相关属性。 
+    // 悬停以查看现有属性的描述。
+    // 欲了解更多信息，请访问: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug DeepMimicDecLocoHeight",
+            "type": "python",
+            "request": "launch",
+            "python": "/home/embodied/miniconda3/envs/asap_deploy/bin/python",
+            "program": "${workspaceFolder}/rl_policy/deepmimic_dec_loco_height.py",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "--config=config/g1_29dof_hist.yaml",
+                "--loco_model_path=./models/dec_loco/20250109_231507-noDR_rand_history_loco_stand_height_noise-decoupled_locomotion-g1_29dof/model_6600.onnx",
+                "--mimic_model_paths=./models/mimic"
+            ],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            "cwd": "${workspaceFolder}"
+            }
+        {
+            "name": "Python Debugger: Current File",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal"
+        }
+    ]
+}

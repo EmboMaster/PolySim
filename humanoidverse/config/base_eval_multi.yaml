@@ -1,0 +1,22 @@
+eval_timestamp: ${now:%Y%m%d_%H%M%S}
+eval_name: TEST
+eval_log_dir: logs_eval/${eval_name}/${eval_timestamp}
+hydra:
+  run:
+    dir: ${eval_log_dir}
+simulator:
+  _target_: humanoidverse.simulator.isaacgym.isaacgym.IsaacGym
+checkpointdir: "logs/MotionTracking/xxxxxxxx_xxxxxxx-MotionTracking_CR7-motion_tracking-g1_29dof_anneal_23dof"
+headless: True
+num_envs: 10
+eval: True
+algo:
+  config:
+    eval_callbacks:
+      analysis_plot_cb:
+        _target_: humanoidverse.agents.callbacks.analysis_plot_motion_tracking.AnalysisPlotMotionTracking
+        config:
+          sim_dt: 0.02
+          log_single_robot: False
+          plot_update_interval: 100
+          compute_metrics: True

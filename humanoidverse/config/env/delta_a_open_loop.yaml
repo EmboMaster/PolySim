@@ -1,0 +1,37 @@
+# @package _global_
+
+defaults:
+  - motion_tracking
+
+# Env structure
+env:
+  _target_: humanoidverse.envs.delta_a.delta_a_open_loop.DeltaA_OpenLoop 
+  config:
+    use_teleop_control: False
+    add_extra_action: True
+    max_episode_length_s: 20
+    termination:
+      terminate_by_contact: False
+      terminate_by_gravity: False
+      terminate_by_low_height: False
+      terminate_when_motion_end: True
+      terminate_when_motion_far: False
+    termination_scales:
+      termination_min_base_height : 0.3
+      termination_gravity_x : 0.8
+      termination_gravity_y : 0.8
+      termination_motion_far_threshold : 0.5
+
+    resample_motion_when_training: True
+    resample_time_interval_s: 2000
+    noise_to_initial_level: 0
+
+    enforce_randomize_motion_start_eval: False
+    
+# Globally accessible parameters
+log_task_name: delta_a
+
+eval_overrides:
+  env:
+    config: 
+      max_episode_length_s: 100000

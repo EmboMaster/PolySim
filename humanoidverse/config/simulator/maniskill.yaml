@@ -1,0 +1,54 @@
+# @package _global_
+
+# Env structure
+simulator:
+  _target_: humanoidverse.simulator.maniskill.maniskill.ManiSkill
+  _recursive_: False
+  config:
+    name: "maniskill"
+    terrain: ${terrain}
+    plane:
+        static_friction: 1.0
+        dynamic_friction: 1.0
+        restitution: 0.0
+    sim:
+      fps: 200
+      control_decimation: 4
+      substeps: 1
+      gravity: [0.0, 0.0, -9.81]
+      solver_iterations: 4
+      solver_velocity_iterations: 1
+      render_mode: "human" # [None, "human", "rgb_array"]
+      render_interval: 4
+    
+    scene:
+      num_envs: ${num_envs}
+      env_spacing: ${env.config.env_spacing}
+      replicate_physics: True
+    
+    # ManiSkill specific configurations
+    task:
+      task_name: "PickCube-v1"  # 默认任务
+      control_mode: "pd_ee_delta_pose"  # 控制模式
+      obs_mode: "state"  # 观察模式
+      reward_mode: "dense"  # 奖励模式
+    
+    # 机器人配置
+    robot:
+      robot_type: "panda"  # 机器人类型
+      asset_path: null  # 机器人资产路径，如果为null则使用ManiSkill内置机器人
+    
+    # 环境配置
+    env:
+      max_episode_steps: 1000
+      action_scale: 1.0
+      reward_scale: 1.0
+      
+    # 域随机化配置
+    domain_rand:
+      randomize_friction: true
+      friction_range: [0.5, 1.5]
+      randomize_mass: true
+      mass_range: [0.8, 1.2]
+      randomize_com: true
+      com_range: [-0.1, 0.1]

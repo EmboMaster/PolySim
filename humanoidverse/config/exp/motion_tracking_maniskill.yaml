@@ -1,0 +1,43 @@
+# @package _global_
+
+defaults:
+  - motion_tracking
+
+# 实验特定配置
+exp:
+  name: "motion_tracking_maniskill"
+  description: "ManiSkill G1 humanoid motion tracking experiment"
+  
+  # 使用ManiSkill仿真器
+  simulator: maniskill_g1
+  
+  # 使用ManiSkill环境
+  env: motion_tracking_maniskill
+  
+  # 机器人配置
+  robot: g1/g1_29dof_anneal_23dof
+  
+  # 地形配置
+  terrain: terrain_locomotion_plane
+  
+  # 观察配置
+  obs: motion_tracking/deepmimic_a2c_nolinvel_LARGEnoise_history
+  
+  # 奖励配置
+  rewards: motion_tracking/reward_motion_tracking_dm_2real
+  
+  # 域随机化配置
+  domain_rand: NO_domain_rand
+  
+  # 训练参数
+  num_envs: 64
+  max_episode_length_s: 20
+  
+  # 日志配置
+  log_task_name: motion_tracking_maniskill
+  
+  # 评估配置
+  eval_overrides:
+    env:
+      config: 
+        max_episode_length_s: 100000

@@ -1,0 +1,2 @@
+python humanoidverse/eval_agent.py \
++checkpoint=logs/MotionTracking/20250319_175040-MotionTracking_CR7-motion_tracking-g1_29dof_anneal_23dof/model_7100.pt

@@ -1,0 +1,17 @@
+eval_timestamp: ${now:%Y%m%d_%H%M%S}
+eval_name: TEST
+eval_log_dir: logs_eval/${eval_name}/${eval_timestamp}
+simulator:
+  _target_: humanoidverse.simulator.isaacgym.IsaacGym
+env:
+  _target_: humanoidverse.simulator.base_simulator.base_simulator.BaseSimulator
+  config:
+    num_envs: 1
+    env_spacing: 2.0
+    headless: false
+    save_rendering_dir: null
+    ckpt_dir: null
+algo:
+  _target_: humanoidverse.agents.base_algo.base_algo.BaseAlgo
+  device: cuda:0
+checkpoint: /home/embodied/data/zxlei/embodied/humanoid/ASAP/sim2real/models/test/CR7_level1/model_9100.pt
