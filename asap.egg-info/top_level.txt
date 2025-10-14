@@ -1,2 +1,0 @@
-humanoidverse
-smpl_sim
