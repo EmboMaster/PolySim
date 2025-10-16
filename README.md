@@ -7,7 +7,9 @@ Multi-Simulator Dynamics Randomization </h1>
 
 [[Arxiv]](https://arxiv.org/abs/2510.01708)
 [![IsaacGym](https://img.shields.io/badge/IsaacGym-Preview4-b.svg)](https://developer.nvidia.com/isaac-gym) [![IsaacSim](https://img.shields.io/badge/IsaacSim-4.2.0-b.svg)](https://docs.isaacsim.omniverse.nvidia.com/4.2.0/index.html) [![IsaacSim](https://img.shields.io/badge/Genesis-0.2.1-b.svg)](https://docs.isaacsim.omniverse.nvidia.com/4.2.0/index.html) [![Linux platform](https://img.shields.io/badge/Platform-linux--64-orange.svg)](https://ubuntu.com/blog/tag/22-04-lts) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]()
-
+<p align="center">
+    <img src="imgs/intro.jpg" height=50"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+</p>
 </div>
 
 <!-- # Table of Contents -->
@@ -49,7 +51,9 @@ ASAP focuses on studying the transfer of policies across different simulators an
 , a modular framework designed to seamlessly train humanoid skills in multiple simulators such as IsaacGym, IsaacSim, and Genesis. These frameworks share a unified design that decouples simulators, tasks, and algorithms, enabling easy transitions between simulators and the real world with minimal effort (often as simple as a single line of code change).
 
 We thank the developers of ASAP and HumanoidVerse for their foundational work that made PolySim possible.
-
+<p align="center">
+    <img src="imgs/system.jpg" height=50"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+</p>
 ## IsaacGym Conda Env
 
 Create conda environment
