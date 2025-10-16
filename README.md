@@ -8,7 +8,7 @@ Multi-Simulator Dynamics Randomization </h1>
 [[Arxiv]](https://arxiv.org/abs/2510.01708)
 [![IsaacGym](https://img.shields.io/badge/IsaacGym-Preview4-b.svg)](https://developer.nvidia.com/isaac-gym) [![IsaacSim](https://img.shields.io/badge/IsaacSim-4.2.0-b.svg)](https://docs.isaacsim.omniverse.nvidia.com/4.2.0/index.html) [![IsaacSim](https://img.shields.io/badge/Genesis-0.2.1-b.svg)](https://docs.isaacsim.omniverse.nvidia.com/4.2.0/index.html) [![Linux platform](https://img.shields.io/badge/Platform-linux--64-orange.svg)](https://ubuntu.com/blog/tag/22-04-lts) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)]()
 <p align="center">
-    <img src="imgs/intro.jpg" height=500"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+  <img src="imgs/intro.jpg" height="500">
 </p>
 </div>
 
@@ -52,8 +52,9 @@ ASAP focuses on studying the transfer of policies across different simulators an
 
 We thank the developers of ASAP and HumanoidVerse for their foundational work that made PolySim possible.
 <p align="center">
-    <img src="imgs/system.jpg" height=300"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+    <img src="imgs/system.jpg" height="300"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
 </p>
+
 ## IsaacGym Conda Env
 
 Create conda environment
