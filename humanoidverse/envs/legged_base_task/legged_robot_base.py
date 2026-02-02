@@ -86,6 +86,11 @@ class LeggedRobotBase(BaseTask):
                     logger.warning(f"PD gain of joint {name} were not defined, setting them to zero")
                     raise ValueError(f"PD gain of joint {name} were not defined. Should be defined in the yaml file.")
         self.default_dof_pos = self.default_dof_pos.unsqueeze(0)
+        if getattr(self.config.domain_rand, "randomize_default_dof_pos", False):
+            pos_range = getattr(self.config.domain_rand, "default_dof_pos_range", (-0.01, 0.01))
+            pos_noise = torch_rand_float(pos_range[0], pos_range[1], (self.num_envs, self.num_dof), device=str(self.device))
+            self.default_dof_pos = self.default_dof_pos + pos_noise
+        self._init_action_scale()
         self._init_domain_rand_buffers()
 
         # for reward penalty curriculum
@@ -101,6 +106,46 @@ class LeggedRobotBase(BaseTask):
     def _domain_rand_config(self):
         if self.config.domain_rand.push_robots:
             self.push_interval_s = torch.randint(self.config.domain_rand.push_interval_s[0], self.config.domain_rand.push_interval_s[1], (self.num_envs,), device=self.device)
+
+    def _init_action_scale(self):
+        action_scale_cfg = self.config.robot.control.action_scale
+        self.action_scale = torch.ones(self.num_dof, dtype=torch.float, device=self.device)
+        try:
+            from omegaconf import DictConfig, ListConfig
+            dict_types = (dict, DictConfig)
+            list_types = (list, tuple, ListConfig)
+        except Exception:
+            dict_types = (dict,)
+            list_types = (list, tuple)
+
+        if isinstance(action_scale_cfg, (int, float)):
+            self.action_scale *= float(action_scale_cfg)
+            return
+
+        if isinstance(action_scale_cfg, list_types):
+            if len(action_scale_cfg) != self.num_dof:
+                raise ValueError(
+                    f"action_scale list length {len(action_scale_cfg)} does not match num_dof {self.num_dof}"
+                )
+            self.action_scale = torch.tensor(action_scale_cfg, dtype=torch.float, device=self.device)
+            return
+
+        if isinstance(action_scale_cfg, dict_types):
+            for i, name in enumerate(self.dof_names):
+                if name in action_scale_cfg:
+                    self.action_scale[i] = float(action_scale_cfg[name])
+                else:
+                    matched = False
+                    for key, value in action_scale_cfg.items():
+                        if key in name:
+                            self.action_scale[i] = float(value)
+                            matched = True
+                            break
+                    if not matched:
+                        logger.warning(f"Action scale for joint {name} not found; defaulting to 1.0")
+            return
+
+        raise ValueError(f"Unsupported action_scale type: {type(action_scale_cfg)}")
 
     def _init_counters(self):
         self.common_step_counter = 0
@@ -125,8 +170,8 @@ class LeggedRobotBase(BaseTask):
         self._kp_scale = torch.ones(self.num_envs, self.num_dof, dtype=torch.float, device=self.device, requires_grad=False)
         self._kd_scale = torch.ones(self.num_envs, self.num_dof, dtype=torch.float, device=self.device, requires_grad=False)
         self._rfi_lim_scale = torch.ones(self.num_envs, self.num_dof, dtype=torch.float, device=self.device, requires_grad=False)
-        self.push_robot_vel_buf = torch.zeros(self.num_envs, 2, dtype=torch.float, device=self.device, requires_grad=False)
-        self.record_push_robot_vel_buf = torch.zeros(self.num_envs, 2, dtype=torch.float, device=self.device, requires_grad=False)
+        self.push_robot_vel_buf = torch.zeros(self.num_envs, 6, dtype=torch.float, device=self.device, requires_grad=False)
+        self.record_push_robot_vel_buf = torch.zeros(self.num_envs, 6, dtype=torch.float, device=self.device, requires_grad=False)
 
         self.last_contacts_filt = torch.zeros(self.num_envs, len(self.feet_indices), dtype=torch.bool, device=self.device, requires_grad=False)
         self.feet_air_max_height = torch.zeros(self.num_envs, self.feet_indices.shape[0], dtype=torch.float, device=self.device, requires_grad=False)
@@ -579,7 +624,7 @@ class LeggedRobotBase(BaseTask):
         Returns:
             [torch.Tensor]: Torques sent to the simulation
         """
-        actions_scaled = actions * self.config.robot.control.action_scale
+        actions_scaled = actions * self.action_scale
         self.simulator.actions = actions_scaled[0].cpu().detach().numpy()
         control_type = self.config.robot.control.control_type
         if control_type=="P":
@@ -633,8 +678,7 @@ class LeggedRobotBase(BaseTask):
         self.push_robot_plot_counter[not_draw_env_ids] = 0
         
         for env_id in draw_env_ids:
-            push_vel = self.record_push_robot_vel_buf[env_id]
-            push_vel = torch.cat([push_vel, torch.zeros(1, device=self.device)])
+            push_vel = self.record_push_robot_vel_buf[env_id][:3]
             push_pos = self.simulator.robot_root_states[env_id, :3]
             push_vel_list = [push_vel]
             push_pos_list = [push_pos]
@@ -838,10 +882,22 @@ class LeggedRobotBase(BaseTask):
         if len(env_ids) == 0:
             return
         self.need_to_refresh_envs[env_ids] = True
-        max_vel = self.config.domain_rand.max_push_vel_xy
-        self.push_robot_vel_buf[env_ids] = torch_rand_float(-max_vel, max_vel, (len(env_ids), 2), device=str(self.device))  # lin vel x/y
+        default_lin = {"x": (-0.5, 0.5), "y": (-0.5, 0.5), "z": (-0.2, 0.2)}
+        default_ang = {"roll": (-0.52, 0.52), "pitch": (-0.52, 0.52), "yaw": (-0.78, 0.78)}
+        lin_range = getattr(self.config.domain_rand, "push_vel_range", default_lin)
+        ang_range = getattr(self.config.domain_rand, "push_ang_vel_range", default_ang)
+
+        lin_x = torch_rand_float(lin_range["x"][0], lin_range["x"][1], (len(env_ids), 1), device=str(self.device))
+        lin_y = torch_rand_float(lin_range["y"][0], lin_range["y"][1], (len(env_ids), 1), device=str(self.device))
+        lin_z = torch_rand_float(lin_range["z"][0], lin_range["z"][1], (len(env_ids), 1), device=str(self.device))
+        ang_x = torch_rand_float(ang_range["roll"][0], ang_range["roll"][1], (len(env_ids), 1), device=str(self.device))
+        ang_y = torch_rand_float(ang_range["pitch"][0], ang_range["pitch"][1], (len(env_ids), 1), device=str(self.device))
+        ang_z = torch_rand_float(ang_range["yaw"][0], ang_range["yaw"][1], (len(env_ids), 1), device=str(self.device))
+
+        self.push_robot_vel_buf[env_ids] = torch.cat([lin_x, lin_y, lin_z, ang_x, ang_y, ang_z], dim=1)
         self.record_push_robot_vel_buf[env_ids] = self.push_robot_vel_buf[env_ids].clone()
-        self.simulator.robot_root_states[env_ids, 7:9] = self.push_robot_vel_buf[env_ids]
+        self.simulator.robot_root_states[env_ids, 7:10] = self.push_robot_vel_buf[env_ids, :3]
+        self.simulator.robot_root_states[env_ids, 10:13] = self.push_robot_vel_buf[env_ids, 3:]
         # self.gym.set_actor_root_state_tensor(self.sim, gymtorch.unwrap_tensor(self.simulator.all_root_states))
 
 

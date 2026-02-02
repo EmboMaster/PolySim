@@ -82,7 +82,8 @@ class AnalysisPlotMotionTrackingOpenloop(RL_EvalCallback):
             self.act_buf[i].append(actions[i])
 
         if self.log_single_robot:
-            open_loop_actions = self.env.get_open_loop_action_at_current_timestep() * self.env.config.robot.control.action_scale
+            action_scale = getattr(self.env, "action_scale", self.env.config.robot.control.action_scale)
+            open_loop_actions = self.env.get_open_loop_action_at_current_timestep() * action_scale
             perfect_delta_a = self.env._get_perfect_delta_a()
             self.logger.log_states(
                 {

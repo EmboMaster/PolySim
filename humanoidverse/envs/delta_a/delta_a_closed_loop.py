@@ -62,7 +62,7 @@ class DeltaA_ClosedLoop(LeggedRobotMotionTracking):
             [torch.Tensor]: Torques sent to the simulation
         """
 
-        actions_scaled = actions * self.config.robot.control.action_scale
+        actions_scaled = actions * self.action_scale
         control_type = self.config.robot.control.control_type
         if self.config['add_extra_action']:
             motion_action = self.get_closed_loop_action_at_current_timestep()
@@ -119,7 +119,7 @@ class DeltaA_ClosedLoop(LeggedRobotMotionTracking):
                     torch.set_grad_enabled(False)
                 
                     # replace action_scaled with new_best_action *= self.config.robot.control.action_scale
-                    actions_scaled = new_best_action * self.config.robot.control.action_scale
+                    actions_scaled = new_best_action * self.action_scale
 
         
         if hasattr(self.config, 'delta_a_fixed_point_iteration'):
@@ -148,7 +148,7 @@ class DeltaA_ClosedLoop(LeggedRobotMotionTracking):
 
                 
                     # replace action_scaled with new_best_action *= self.config.robot.control.action_scale
-                    actions_scaled = new_best_action * self.config.robot.control.action_scale
+                    actions_scaled = new_best_action * self.action_scale
 
 
 

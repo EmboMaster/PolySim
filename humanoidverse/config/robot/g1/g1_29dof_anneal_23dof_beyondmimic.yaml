@@ -12,6 +12,7 @@ robot:
   upper_body_actions_dim: 8 # Yuanhang
   policy_obs_dim: -1 # Jiawei
   critic_obs_dim: -1
+  anchor_body_name: "torso_link"
   # policy_obs_dim: 45 # Jiawei
   # critic_obs_dim: 238
   # policy_obs_dim: 45 # Jiawei
@@ -27,6 +28,7 @@ robot:
   knee_name: "knee_link"
   has_torso: True
   torso_name: "torso_link"
+  termination_body_names: ["left_ankle_roll_link", "right_ankle_roll_link", "left_wrist_yaw_link", "right_wrist_yaw_link"]
   has_upper_body_dof: True
   dof_names: ['left_hip_pitch_joint', 'left_hip_roll_joint', 'left_hip_yaw_joint', 'left_knee_joint', 'left_ankle_pitch_joint', 'left_ankle_roll_joint',
               'right_hip_pitch_joint', 'right_hip_roll_joint', 'right_hip_yaw_joint', 'right_knee_joint', 'right_ankle_pitch_joint', 'right_ankle_roll_joint',
@@ -52,22 +54,22 @@ robot:
                              2.6704, 2.2515, 2.618, 2.0944,
                              2.6704, 1.5882, 2.618, 2.0944]
               
-  dof_vel_limit_list: [32.0, 32.0, 32.0, 20.0, 37.0, 37.0, 
-                       32.0, 32.0, 32.0, 20.0, 37.0, 37.0, 
+  dof_vel_limit_list: [32.0, 20.0, 32.0, 20.0, 37.0, 37.0, 
+                       32.0, 20.0, 32.0, 20.0, 37.0, 37.0, 
                        32.0, 37.0, 37.0, 
                        37.0, 37.0, 37.0, 37.0, 
                        37.0, 37.0, 37.0, 37.0]
-  dof_effort_limit_list: [88.0, 88.0, 88.0, 139.0, 50.0, 50.0, 
-                          88.0, 88.0, 88.0, 139.0, 50.0, 50.0, 
+  dof_effort_limit_list: [88.0, 139.0, 88.0, 139.0, 50.0, 50.0, 
+                          88.0, 139.0, 88.0, 139.0, 50.0, 50.0, 
                           88.0, 50.0, 50.0,
                           25.0, 25.0, 25.0, 25.0, 
                           25.0, 25.0, 25.0, 25.0]
   # only apply for isaacsim
-  dof_armature_list: [0.03, 0.03, 0.03, 0.03, 0.03, 0.03,
-                      0.03, 0.03, 0.03, 0.03, 0.03, 0.03,
-                      0.03, 0.03, 0.03,
-                      0.03, 0.03, 0.03, 0.03,
-                      0.04, 0.03, 0.03, 0.03]
+  dof_armature_list: [0.010177520, 0.025101925, 0.010177520, 0.025101925, 0.00721945, 0.00721945,
+                      0.010177520, 0.025101925, 0.010177520, 0.025101925, 0.00721945, 0.00721945,
+                      0.010177520, 0.00721945, 0.00721945,
+                      0.003609725, 0.003609725, 0.003609725, 0.003609725,
+                     0.003609725, 0.003609725, 0.003609725, 0.003609725]
   # only apply for isaacsim
   dof_joint_friction_list: [0.03, 0.03, 0.03, 0.03, 0.03, 0.03,
                             0.03, 0.03, 0.03, 0.03, 0.03, 0.03,
@@ -84,36 +86,37 @@ robot:
 
 
   terminate_after_contacts_on : ["pelvis", "shoulder", "hip"]
-  penalize_contacts_on: ["pelvis", "shoulder", "hip"]
+  penalize_contacts_off: ["left_ankle_roll_link", "right_ankle_roll_link", "left_wrist_yaw_link", "right_wrist_yaw_link"]
+
   init_state:
-    pos: [0.0, 0.0, 0.8] # x,y,z [m]
+    pos: [0.0, 0.0, 0.76] # x,y,z [m]
     rot: [0.0, 0.0, 0.0, 1.0] # x,y,z,w [quat]
     lin_vel: [0.0, 0.0, 0.0]  # x,y,z [m/s]
     ang_vel: [0.0, 0.0, 0.0]  # x,y,z [rad/s]
     default_joint_angles: # = target angles [rad] when action = 0.0
-      left_hip_pitch_joint: -0.1
+      left_hip_pitch_joint: -0.312
       left_hip_roll_joint: 0.
       left_hip_yaw_joint: 0.
-      left_knee_joint: 0.3
-      left_ankle_pitch_joint: -0.2
+      left_knee_joint: 0.669
+      left_ankle_pitch_joint: -0.363
       left_ankle_roll_joint: 0.
-      right_hip_pitch_joint: -0.1
+      right_hip_pitch_joint: -0.312
       right_hip_roll_joint: 0.
       right_hip_yaw_joint: 0.
-      right_knee_joint: 0.3
-      right_ankle_pitch_joint: -0.2
+      right_knee_joint: 0.669
+      right_ankle_pitch_joint: -0.363
       right_ankle_roll_joint: 0.
       waist_yaw_joint : 0.
       waist_roll_joint : 0.
       waist_pitch_joint : 0.
-      left_shoulder_pitch_joint: 0.
-      left_shoulder_roll_joint: 0.
+      left_shoulder_pitch_joint: 0.2
+      left_shoulder_roll_joint: 0.2
       left_shoulder_yaw_joint: 0.
-      left_elbow_joint: 0.
-      right_shoulder_pitch_joint: 0.
-      right_shoulder_roll_joint: 0.
+      left_elbow_joint: 0.6
+      right_shoulder_pitch_joint: 0.2
+      right_shoulder_roll_joint: -0.2
       right_shoulder_yaw_joint: 0.
-      right_elbow_joint: 0.
+      right_elbow_joint: 0.6
 
 
 
@@ -126,35 +129,35 @@ robot:
     control_type: P
     # PD Drive parameters:
     stiffness: # [N*m/rad]
-      hip_yaw: 100
-      hip_roll: 100
-      hip_pitch: 100
-      knee: 200
-      ankle_pitch: 20
-      ankle_roll: 20
-      waist_yaw: 400
-      waist_roll: 400
-      waist_pitch: 400
-      shoulder_pitch: 90
-      shoulder_roll: 60
-      shoulder_yaw: 20
-      elbow: 60
+      hip_yaw: 40.17923847137318
+      hip_roll: 99.09842777666113
+      hip_pitch: 40.17923847137318
+      knee: 99.09842777666113
+      ankle_pitch: 28.501246195748
+      ankle_roll: 28.501246195748
+      waist_yaw: 40.17923847137318
+      waist_roll: 28.501246195748
+      waist_pitch: 28.501246195748
+      shoulder_pitch: 14.25062309787429
+      shoulder_roll: 14.25062309787429
+      shoulder_yaw: 14.25062309787429
+      elbow: 14.25062309787429
 
 
     damping: # [N*m/rad]  # [N*m*s/rad]
-      hip_yaw: 2.5
-      hip_roll: 2.5
-      hip_pitch: 2.5
-      knee: 5.0
-      ankle_pitch: 0.2
-      ankle_roll: 0.1
-      waist_yaw: 5.0
-      waist_roll: 5.0
-      waist_pitch: 5.0
-      shoulder_pitch: 2.0
-      shoulder_roll: 1.0
-      shoulder_yaw: 0.4
-      elbow: 1.0
+      hip_yaw: 2.5578897650279457
+      hip_roll: 6.3088018534966395
+      hip_pitch: 2.5578897650279457
+      knee: 6.3088018534966395
+      ankle_pitch: 1.8144456865848
+      ankle_roll: 1.8144456865848
+      waist_yaw: 2.5578897650279457
+      waist_roll: 1.8144456865848
+      waist_pitch: 1.8144456865848
+      shoulder_pitch: 0.907222843292423
+      shoulder_roll: 0.907222843292423
+      shoulder_yaw: 0.907222843292423
+      elbow: 0.907222843292423
 
     # action scale: target angle = actionScale * action + defaultAngle
     action_scale:
@@ -182,7 +185,7 @@ robot:
       right_shoulder_yaw_joint: 0.43857731392336724
       right_elbow_joint: 0.43857731392336724
     action_clip_value: 100.0
-    clip_torques: True
+    clip_torques: False
 
   asset:
     collapse_fixed_joints: True # merge bodies connected by fixed joints. Specific fixed joints can be kept by adding " <... dont_collapse="true">
@@ -209,7 +212,11 @@ robot:
 
   motion:
     motion_file : 'humanoidverse/data/motions/g1_29dof_anneal_23dof/TairanTestbed/singles/'
+    adaptive_sampling: True
     # motion_file : 'humanoidverse/data/motions/g1_29dof/v1/singles/0-ACCAD_Male2General_c3d_A6- Box lift_poses.pkl'
+    adaptive_uniform_ratio: 0.1
+    adaptive_alpha: 0.001
+    adaptive_kernel_size: 1
     asset:
       assetRoot: "humanoidverse/data/robots/g1/"
       # assetFileName: "g1_29dof_anneal_23dof.xml"

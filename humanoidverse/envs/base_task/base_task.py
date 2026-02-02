@@ -196,8 +196,12 @@ class BaseTask():
         feet_names = [s for s in self.body_names if self.config.robot.foot_name in s]
         knee_names = [s for s in self.body_names if self.config.robot.knee_name in s]
         penalized_contact_names = []
-        for name in self.config.robot.penalize_contacts_on:
-            penalized_contact_names.extend([s for s in self.body_names if name in s])
+        if hasattr(self.config.robot, "penalize_contacts_off") and self.config.robot.penalize_contacts_off:
+            excluded = set(self.config.robot.penalize_contacts_off)
+            penalized_contact_names = [s for s in self.body_names if s not in excluded]
+        else:
+            for name in self.config.robot.penalize_contacts_on:
+                penalized_contact_names.extend([s for s in self.body_names if name in s])
         termination_contact_names = []
         for name in self.config.robot.terminate_after_contacts_on:
             termination_contact_names.extend([s for s in self.body_names if name in s])

@@ -1,0 +1,33 @@
+# @package _global_
+
+# defaults:
+#   - reward_base
+
+rewards:
+  set_reward: Zibo
+  set_reward_date: 2025-02-15
+  only_positive_rewards: False
+  reward_scales:
+      motion_global_anchor_position_error_exp: 0.5
+      motion_global_anchor_orientation_error_exp: 0.5
+      motion_relative_body_position_error_exp: 1.0
+      motion_relative_body_orientation_error_exp: 1.0
+      motion_global_body_linear_velocity_error_exp: 1.0
+      motion_global_body_angular_velocity_error_exp: 1.0
+      penalty_action_rate: -0.1
+      limits_dof_pos: -10.0
+      undesired_contacts: -0.1
+
+  reward_tracking_sigma:
+    motion_global_anchor_position: 0.3
+    motion_global_anchor_orientation: 0.4  
+    motion_relative_body_position: 0.3
+    motion_relative_body_orientation: 0.4
+    motion_global_body_linear_velocity: 1.0
+    motion_global_body_angular_velocity: 3.14
+
+    
+  threshold:
+    undesired_contact_threshold: 1.0    
+
+  reward_penalty_curriculum: False

@@ -86,6 +86,7 @@ class LeggedRobotBase(BaseTask):
                     logger.warning(f"PD gain of joint {name} were not defined, setting them to zero")
                     raise ValueError(f"PD gain of joint {name} were not defined. Should be defined in the yaml file.")
         self.default_dof_pos = self.default_dof_pos.unsqueeze(0)
+        self._init_action_scale()
         self._init_domain_rand_buffers()
 
         # for reward penalty curriculum
@@ -101,6 +102,46 @@ class LeggedRobotBase(BaseTask):
     def _domain_rand_config(self):
         if self.config.domain_rand.push_robots:
             self.push_interval_s = torch.randint(self.config.domain_rand.push_interval_s[0], self.config.domain_rand.push_interval_s[1], (self.num_envs,), device=self.device)
+
+    def _init_action_scale(self):
+        action_scale_cfg = self.config.robot.control.action_scale
+        self.action_scale = torch.ones(self.num_dof, dtype=torch.float, device=self.device)
+        try:
+            from omegaconf import DictConfig, ListConfig
+            dict_types = (dict, DictConfig)
+            list_types = (list, tuple, ListConfig)
+        except Exception:
+            dict_types = (dict,)
+            list_types = (list, tuple)
+
+        if isinstance(action_scale_cfg, (int, float)):
+            self.action_scale *= float(action_scale_cfg)
+            return
+
+        if isinstance(action_scale_cfg, list_types):
+            if len(action_scale_cfg) != self.num_dof:
+                raise ValueError(
+                    f"action_scale list length {len(action_scale_cfg)} does not match num_dof {self.num_dof}"
+                )
+            self.action_scale = torch.tensor(action_scale_cfg, dtype=torch.float, device=self.device)
+            return
+
+        if isinstance(action_scale_cfg, dict_types):
+            for i, name in enumerate(self.dof_names):
+                if name in action_scale_cfg:
+                    self.action_scale[i] = float(action_scale_cfg[name])
+                else:
+                    matched = False
+                    for key, value in action_scale_cfg.items():
+                        if key in name:
+                            self.action_scale[i] = float(value)
+                            matched = True
+                            break
+                    if not matched:
+                        logger.warning(f"Action scale for joint {name} not found; defaulting to 1.0")
+            return
+
+        raise ValueError(f"Unsupported action_scale type: {type(action_scale_cfg)}")
 
     def _init_counters(self):
         self.common_step_counter = 0
@@ -568,7 +609,7 @@ class LeggedRobotBase(BaseTask):
         Returns:
             [torch.Tensor]: Torques sent to the simulation
         """
-        actions_scaled = actions * self.config.robot.control.action_scale
+        actions_scaled = actions * self.action_scale
         self.simulator.actions = actions_scaled[0].cpu().detach().numpy()
         control_type = self.config.robot.control.control_type
         if control_type=="P":

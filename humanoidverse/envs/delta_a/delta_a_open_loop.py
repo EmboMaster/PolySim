@@ -47,14 +47,14 @@ class DeltaA_OpenLoop(LeggedRobotMotionTracking):
                 actions *= 0.
                 print("actions", actions)
                 pass
-        actions_scaled = actions * self.config.robot.control.action_scale
+        actions_scaled = actions * self.action_scale
         control_type = self.config.robot.control.control_type
         if self.config['add_extra_action']:
             motion_action = self.get_open_loop_action_at_current_timestep()
             # motion_action *= 0
             # print("motion_action", motion_action)
             # print("self.get_open_loop_action_at_current_timestep()", self.get_open_loop_action_at_current_timestep())
-            motion_action *= self.config.robot.control.action_scale
+            motion_action *= self.action_scale
         else:
             print("zeroing out motion_action") 
             motion_action = torch.zeros_like(actions_scaled)
@@ -142,7 +142,7 @@ class DeltaA_OpenLoop(LeggedRobotMotionTracking):
     
     # NOTE: this is the perfect delta_a for 0.65Kp scenario
     def _get_perfect_delta_a(self):
-        return (self.get_open_loop_action_at_current_timestep() * self.config.robot.control.action_scale + self.default_dof_pos - self.simulator.dof_pos) * -0.35
+        return (self.get_open_loop_action_at_current_timestep() * self.action_scale + self.default_dof_pos - self.simulator.dof_pos) * -0.35
 
     def _get_obs_actions_open_loop(self):
         return self.get_open_loop_action_at_current_timestep()
@@ -162,4 +162,3 @@ class DeltaA_OpenLoop(LeggedRobotMotionTracking):
     
 
     
-

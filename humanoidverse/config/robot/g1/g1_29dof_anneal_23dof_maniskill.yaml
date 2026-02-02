@@ -170,7 +170,30 @@ robot:
       elbow: 1.0
 
     # action scale: target angle = actionScale * action + defaultAngle
-    action_scale: 0.25
+    action_scale:
+      left_hip_pitch_joint: 0.5475464652142303
+      left_hip_roll_joint: 0.3506614663788243
+      left_hip_yaw_joint: 0.5475464652142303
+      left_knee_joint: 0.3506614663788243
+      left_ankle_pitch_joint: 0.43857731392336724
+      left_ankle_roll_joint: 0.43857731392336724
+      right_hip_pitch_joint: 0.5475464652142303
+      right_hip_roll_joint: 0.3506614663788243
+      right_hip_yaw_joint: 0.5475464652142303
+      right_knee_joint: 0.3506614663788243
+      right_ankle_pitch_joint: 0.43857731392336724
+      right_ankle_roll_joint: 0.43857731392336724
+      waist_yaw_joint: 0.5475464652142303
+      waist_roll_joint: 0.43857731392336724
+      waist_pitch_joint: 0.43857731392336724
+      left_shoulder_pitch_joint: 0.43857731392336724
+      left_shoulder_roll_joint: 0.43857731392336724
+      left_shoulder_yaw_joint: 0.43857731392336724
+      left_elbow_joint: 0.43857731392336724
+      right_shoulder_pitch_joint: 0.43857731392336724
+      right_shoulder_roll_joint: 0.43857731392336724
+      right_shoulder_yaw_joint: 0.43857731392336724
+      right_elbow_joint: 0.43857731392336724
     action_clip_value: 100.0
     clip_torques: True
 
@@ -384,4 +407,3 @@ env:
         fps: 200 # 1/dt , dt = 0.005
         control_freq_inv: 4  # decimation
         substeps: 1
-
