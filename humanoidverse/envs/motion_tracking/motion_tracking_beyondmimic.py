@@ -757,7 +757,7 @@ class LeggedRobotMotionTracking(LeggedRobotBase):
     def _reward_motion_global_anchor_position_error_exp(self):
         root_pos_diff = self.ref_anchor_pos_w - self.robot_anchor_pos_w
         error = torch.sum(root_pos_diff**2, dim=-1)
-        return torch.exp(-error / self.config.rewards.reward_tracking_sigma.motion_global_anchor_position)
+        return torch.exp(-error / self.config.rewards.reward_tracking_sigma.motion_global_anchor_position**2)
 
     def _reward_motion_global_anchor_orientation_error_exp(self):
         root_rot_diff = quat_mul(
@@ -766,8 +766,9 @@ class LeggedRobotMotionTracking(LeggedRobotBase):
             w_last=True,
         )
         rotation_diff = quat_to_angle_axis(root_rot_diff)[0]
-        error = torch.sum(rotation_diff**2, dim=-1)
-        return torch.exp(-error / self.config.rewards.reward_tracking_sigma.motion_global_anchor_orientation)
+        # rotation_diff is per-env angle (shape: [num_envs]), so do not reduce to scalar
+        error = rotation_diff**2
+        return torch.exp(-error / self.config.rewards.reward_tracking_sigma.motion_global_anchor_orientation**2)
 
     def _reward_motion_relative_body_position_error_exp(self):
         anchor_pos_w_repeat = self.ref_anchor_pos_w.unsqueeze(1).repeat(1, self.ref_body_pos_extend.shape[1], 1)
@@ -792,7 +793,7 @@ class LeggedRobotMotionTracking(LeggedRobotBase):
         ).view_as(self.ref_body_pos_extend)
 
         error = torch.sum((ref_body_pos_relative - self._rigid_body_pos_extend) ** 2, dim=-1)
-        return torch.exp(-error.mean(-1) / self.config.rewards.reward_tracking_sigma.motion_relative_body_position)
+        return torch.exp(-error.mean(-1) / self.config.rewards.reward_tracking_sigma.motion_relative_body_position**2)
 
     def _reward_motion_relative_body_orientation_error_exp(self):
         delta_ori_w = calc_heading_quat(
@@ -838,7 +839,7 @@ class LeggedRobotMotionTracking(LeggedRobotBase):
         jpos = self.simulator.dof_pos
         violation_min = (lower_soft_limit - jpos).clamp_min(0.0)
         violation_max = (jpos - upper_soft_limit).clamp_min(0.0)
-        return -(violation_min + violation_max).sum(1)
+        return (violation_min + violation_max).sum(1)
 
 
     def _reward_motion_global_body_linear_velocity_error_exp(self):

@@ -86,7 +86,7 @@ robot:
 
 
   terminate_after_contacts_on : ["pelvis", "shoulder", "hip"]
-  penalize_contacts_off: ["left_ankle_roll_link", "right_ankle_roll_link", "left_wrist_yaw_link", "right_wrist_yaw_link"]
+  penalize_contacts_off: ["left_ankle_roll_link", "right_ankle_roll_link"]
 
   init_state:
     pos: [0.0, 0.0, 0.76] # x,y,z [m]

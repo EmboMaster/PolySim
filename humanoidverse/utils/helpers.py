@@ -97,13 +97,13 @@ def parse_observation(cls: Any,
         # Yuanhang: use rand_like (uniform 0-1) instead of randn_like (N~[0,1])
         # buf_dict[obs_key] = actor_obs * obs_scale + (torch.randn_like(actor_obs)* 2. - 1.) * obs_noise
         buf_dict[obs_key] = (actor_obs + (torch.rand_like(actor_obs)* 2. - 1.) * obs_noise) * obs_scale
-        log_dir = "log_info"
-        log_file = os.path.join(log_dir, "actor_obs.log")
-        with open(log_file, "a", encoding="utf-8") as f:
-            f.write("\n[origin obs]\n")
-            f.write(f"obs key:     {obs_key}\n")
-            f.write(f"obs origin :     {actor_obs}\n")
-            f.write(f"obs final :     {buf_dict[obs_key]}\n")
+        # log_dir = "log_info"
+        # log_file = os.path.join(log_dir, "actor_obs.log")
+        # with open(log_file, "a", encoding="utf-8") as f:
+        #     f.write("\n[origin obs]\n")
+        #     f.write(f"obs key:     {obs_key}\n")
+        #     f.write(f"obs origin :     {actor_obs}\n")
+        #     f.write(f"obs final :     {buf_dict[obs_key]}\n")
 
 
 def export_policy_as_jit(actor_critic, path):

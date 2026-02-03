@@ -420,7 +420,7 @@ class MotionLibBase():
         if motion_ids is None:
             return (self._motion_num_frames * self._sim_fps / self._motion_fps).ceil().int()
         else:
-            return (self._motion_num_frames[motion_ids] * self._sim_fps / self._motion_fps).ceil().int()
+            return (self._motion_num_frames[motion_ids] * self._sim_fps / self._motion_fps[motion_ids]).ceil().int()
 
     def sample_time(self, motion_ids, truncate_time=None):
         n = len(motion_ids)

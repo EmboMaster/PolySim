@@ -183,7 +183,8 @@ def main(config: DictConfig):
 
             # Construct the command to launch the server script
             cmd_parts = [
-                f"conda run -n {conda_env}",
+                f"conda run --no-capture-output -n {conda_env}",
+                "stdbuf -oL -eL",
                 "python -u humanoidverse/hydra_server.py", # -u for unbuffered output
                 f"+rpc={server_name}",
                 f"+simulator={server_name}",
@@ -208,6 +209,7 @@ def main(config: DictConfig):
             else:
                 prefix = ""
             
+            # Force line-buffered output so server logs update in real time.
             final_cmd = f"{prefix} export CUDA_LAUNCH_BLOCKING=1 && {' '.join(cmd_parts)}"
 
             # Redirect server stdout/stderr to a dedicated log file

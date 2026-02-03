@@ -33,7 +33,7 @@ class EnvService:
         if isinstance(res, tuple) and len(res) == 4:
             obs, rew, done, info = res
             dev = rew.device if hasattr(rew, "device") else self.device
-            print("rew: ",rew[:10])
+            # print("rew: ",rew[:10])
             return {
                 "obs":  obs,
                 "reward": rew,

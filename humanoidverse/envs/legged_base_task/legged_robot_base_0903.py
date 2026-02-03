@@ -290,12 +290,12 @@ class LeggedRobotBase(BaseTask):
         self.last_episode_length_buf = self.episode_length_buf.clone()
 
         self._pre_compute_observations_callback()
-        log_dir = "log_info"
-        log_file = os.path.join(log_dir, "actor_obs.log")
-        with open(log_file, "a", encoding="utf-8") as f:
-            f.write("\n[base before reset]\n")
-            f.write(f"base_ang_vel:     {self.base_ang_vel}\n")
-            f.write(f"base_ang_vel origin before 111:     {self.simulator.robot_root_states[:, 10:13]}\n")
+        # log_dir = "log_info"
+        # log_file = os.path.join(log_dir, "actor_obs.log")
+        # with open(log_file, "a", encoding="utf-8") as f:
+        #     f.write("\n[base before reset]\n")
+        #     f.write(f"base_ang_vel:     {self.base_ang_vel}\n")
+        #     f.write(f"base_ang_vel origin before 111:     {self.simulator.robot_root_states[:, 10:13]}\n")
         self._update_tasks_callback()
         # compute observations, rewards, resets, ...
         self._check_termination()
