@@ -28,7 +28,7 @@ robot:
   knee_name: "knee_link"
   has_torso: True
   torso_name: "torso_link"
-  termination_body_names: ["left_ankle_roll_link", "right_ankle_roll_link", "left_wrist_yaw_link", "right_wrist_yaw_link"]
+  termination_body_names: ["left_ankle_roll_link", "right_ankle_roll_link","right_elbow_link","left_elbow_link"]
   has_upper_body_dof: True
   dof_names: ['left_hip_pitch_joint', 'left_hip_roll_joint', 'left_hip_yaw_joint', 'left_knee_joint', 'left_ankle_pitch_joint', 'left_ankle_roll_joint',
               'right_hip_pitch_joint', 'right_hip_roll_joint', 'right_hip_yaw_joint', 'right_knee_joint', 'right_ankle_pitch_joint', 'right_ankle_roll_joint',

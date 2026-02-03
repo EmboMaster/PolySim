@@ -551,6 +551,8 @@ class LeggedRobotBase(BaseTask):
             
             name = self.reward_names[i]
             rew = self.reward_functions[i]() * self.reward_scales[name]
+            if rew.shape[0] != self.num_envs:
+                logger.error(f"Reward name: {name}, rew.shape: {rew.shape}, num_envs: {self.num_envs}")
             try:
                 assert rew.shape[0] == self.num_envs
             except:

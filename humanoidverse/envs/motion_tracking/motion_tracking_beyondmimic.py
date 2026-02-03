@@ -34,6 +34,7 @@ class LeggedRobotMotionTracking(LeggedRobotBase):
         self.debug_viz = True
         
         super().__init__(config, device)
+        self.use_adaptive_sampling = False
         self._init_motion_lib()
         self._init_adaptive_sampling()
         self._init_motion_extend()
@@ -238,8 +239,8 @@ class LeggedRobotMotionTracking(LeggedRobotBase):
             self.reset_buf |= anchor_z_diff > threshold
         if getattr(self.config.termination, "terminate_when_anchor_bad_ori", False):
             threshold = self.config.termination_scales.termination_anchor_ori_threshold
-            motion_proj_grav = quat_rotate_inverse(self.ref_anchor_rot_w, self.gravity_vec)
-            robot_proj_grav = quat_rotate_inverse(self.robot_anchor_rot_w, self.gravity_vec)
+            motion_proj_grav = quat_rotate_inverse(self.ref_anchor_rot_w, self.gravity_vec,w_last=True)
+            robot_proj_grav = quat_rotate_inverse(self.robot_anchor_rot_w, self.gravity_vec,w_last=True)
             self.reset_buf |= torch.abs(motion_proj_grav[:, 2] - robot_proj_grav[:, 2]) > threshold
         if getattr(self.config.termination, "terminate_when_motion_body_pos_z_only", False):
             threshold = self.config.termination_scales.termination_motion_body_pos_z_threshold
@@ -248,20 +249,18 @@ class LeggedRobotMotionTracking(LeggedRobotBase):
             else:
                 body_ids = list(range(self.ref_body_pos_extend.shape[1]))
             anchor_pos_w_repeat = self.ref_anchor_pos_w.unsqueeze(1).repeat(1, len(body_ids), 1)
-            anchor_quat_w_repeat = self.ref_anchor_rot_w.unsqueeze(1).repeat(1, len(body_ids), 1)
             robot_anchor_pos_w_repeat = self.robot_anchor_pos_w.unsqueeze(1).repeat(1, len(body_ids), 1)
-            robot_anchor_quat_w_repeat = self.robot_anchor_rot_w.unsqueeze(1).repeat(1, len(body_ids), 1)
 
             delta_pos_w = robot_anchor_pos_w_repeat.clone()
             delta_pos_w[..., 2] = anchor_pos_w_repeat[..., 2]
             delta_ori_w = calc_heading_quat(
                 quat_mul(
-                    robot_anchor_quat_w_repeat,
-                    quat_conjugate(anchor_quat_w_repeat, w_last=True),
+                    self.robot_anchor_rot_w,
+                    quat_conjugate(self.ref_anchor_rot_w, w_last=True),
                     w_last=True,
                 ),
                 w_last=True,
-            )
+            ).unsqueeze(1).repeat(1, len(body_ids), 1)
 
             ref_body_pos_relative = delta_pos_w + my_quat_rotate(
                 delta_ori_w.reshape(-1, 4),
@@ -772,11 +771,7 @@ class LeggedRobotMotionTracking(LeggedRobotBase):
 
     def _reward_motion_relative_body_position_error_exp(self):
         anchor_pos_w_repeat = self.ref_anchor_pos_w.unsqueeze(1).repeat(1, self.ref_body_pos_extend.shape[1], 1)
-        anchor_quat_w_repeat = self.ref_anchor_rot_w.unsqueeze(1).repeat(1, self.ref_body_pos_extend.shape[1], 1)
         robot_anchor_pos_w_repeat = self.robot_anchor_pos_w.unsqueeze(1).repeat(
-            1, self.ref_body_pos_extend.shape[1], 1
-        )
-        robot_anchor_quat_w_repeat = self.robot_anchor_rot_w.unsqueeze(1).repeat(
             1, self.ref_body_pos_extend.shape[1], 1
         )
 
@@ -784,12 +779,12 @@ class LeggedRobotMotionTracking(LeggedRobotBase):
         delta_pos_w[..., 2] = anchor_pos_w_repeat[..., 2]
         delta_ori_w = calc_heading_quat(
             quat_mul(
-                robot_anchor_quat_w_repeat,
-                quat_conjugate(anchor_quat_w_repeat, w_last=True),
+                self.robot_anchor_rot_w,
+                quat_conjugate(self.ref_anchor_rot_w, w_last=True),
                 w_last=True,
             ),
             w_last=True,
-        )
+        ).unsqueeze(1).repeat(1, self.ref_body_pos_extend.shape[1], 1)
 
         ref_body_pos_relative = delta_pos_w + my_quat_rotate(
             delta_ori_w.reshape(-1, 4),
@@ -800,18 +795,14 @@ class LeggedRobotMotionTracking(LeggedRobotBase):
         return torch.exp(-error.mean(-1) / self.config.rewards.reward_tracking_sigma.motion_relative_body_position)
 
     def _reward_motion_relative_body_orientation_error_exp(self):
-        anchor_quat_w_repeat = self.ref_anchor_rot_w.unsqueeze(1).repeat(1, self.ref_body_rot_extend.shape[1], 1)
-        robot_anchor_quat_w_repeat = self.robot_anchor_rot_w.unsqueeze(1).repeat(
-            1, self.ref_body_rot_extend.shape[1], 1
-        )
         delta_ori_w = calc_heading_quat(
             quat_mul(
-                robot_anchor_quat_w_repeat,
-                quat_conjugate(anchor_quat_w_repeat, w_last=True),
+                self.robot_anchor_rot_w,
+                quat_conjugate(self.ref_anchor_rot_w, w_last=True),
                 w_last=True,
             ),
             w_last=True,
-        )
+        ).unsqueeze(1).repeat(1, self.ref_body_rot_extend.shape[1], 1)
 
         ref_body_quat_relative = quat_mul(delta_ori_w, self.ref_body_rot_extend, w_last=True)
         rot_diff = quat_mul(

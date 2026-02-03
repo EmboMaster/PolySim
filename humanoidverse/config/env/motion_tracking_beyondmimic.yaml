@@ -5,7 +5,7 @@ defaults:
 
 # Env structure
 env:
-  _target_: humanoidverse.envs.motion_tracking_beyondmimic.LeggedRobotMotionTracking
+  _target_: humanoidverse.envs.motion_tracking.motion_tracking_beyondmimic.LeggedRobotMotionTracking
   config:
     max_episode_length_s: 20
     termination:
