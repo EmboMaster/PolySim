@@ -18,7 +18,8 @@ robot:
   # policy_obs_dim: 45 # Jiawei
   # policy_obs_dim: 241 # Jiawei
   # self_obs_max_coords: 298  # ${eval:1+20*(3+6+3+3)-3}
-
+  # right_wrist_body_name: "right_elbow_link"  
+  # left_wrist_body_name: "left_elbow_link"
   key_bodies: ["left_ankle_roll_link", "right_ankle_roll_link"]
   contact_bodies: [ "left_ankle_roll_link", "right_ankle_roll_link" ]
   num_feet: 2
@@ -185,7 +186,7 @@ robot:
       right_shoulder_yaw_joint: 0.43857731392336724
       right_elbow_joint: 0.43857731392336724
     action_clip_value: 100.0
-    clip_torques: False
+    clip_torques: True
 
   asset:
     collapse_fixed_joints: True # merge bodies connected by fixed joints. Specific fixed joints can be kept by adding " <... dont_collapse="true">

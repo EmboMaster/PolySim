@@ -94,7 +94,7 @@ def main(config: OmegaConf):
         args_cli.env_spacing = config.env.config.env_spacing # config.env_spacing
         args_cli.output_dir = config.output_dir
         args_cli.headless = config.headless
-        
+        args_cli.device = str(config.device)
         app_launcher = AppLauncher(args_cli)
         simulation_app = app_launcher.app  
         

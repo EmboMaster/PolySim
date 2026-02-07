@@ -205,7 +205,8 @@ def main(config: DictConfig):
                 prefix = f"export LD_LIBRARY_PATH=/home/embodied/miniconda3/envs/{conda_env}/lib:$LD_LIBRARY_PATH &&"
             elif server_name == 'isaacsim':
                 # Isaac Sim requires unsetting several paths to avoid conflicts.
-                prefix = "unset PYTHONPATH && unset LD_LIBRARY_PATH &&"
+                # prefix = "unset PYTHONPATH && unset LD_LIBRARY_PATH &&"
+                prefix = ""
             else:
                 prefix = ""
             
@@ -284,7 +285,9 @@ def main(config: DictConfig):
         algo.learn()
         
         logger.info("Training finished.")
-
+    except BaseException as e:
+        logger.exception("Fatal error in main try block")
+        raise
     finally:
         # ======================================================================================
         # 4. Cleanup

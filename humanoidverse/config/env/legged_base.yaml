@@ -13,7 +13,7 @@ env:
     rewards: ${rewards}
     terrain: ${terrain}
     obs: ${obs}
-    env_spacing: 5.0
+    env_spacing: 20.0
     max_episode_length_s: 20
 
     normalization:

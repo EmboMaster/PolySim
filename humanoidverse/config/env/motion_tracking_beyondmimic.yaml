@@ -5,7 +5,7 @@ defaults:
 
 # Env structure
 env:
-  _target_: humanoidverse.envs.motion_tracking.motion_tracking_beyondmimic.LeggedRobotMotionTracking
+  _target_: humanoidverse.envs.motion_tracking.motion_tracking_beyondmimic_new.LeggedRobotMotionTracking
   config:
     max_episode_length_s: 20
     termination:
@@ -47,7 +47,7 @@ env:
     resample_motion_when_training: True
     resample_time_interval_s: 2000
 
-    noise_to_initial_level: 1
+    noise_to_initial_level: 0
     init_noise_scale: 
       dof_pos: 0.1
       dof_vel: 0.15

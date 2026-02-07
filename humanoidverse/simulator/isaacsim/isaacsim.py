@@ -587,6 +587,24 @@ class IsaacSim(BaseSimulator):
         # import ipdb; ipdb.set_trace()
         assert self.dof_names == self.robot_config.dof_names, "DOF names must match the config"
         assert self.body_names == self.robot_config.body_names, "Body names must match the config"
+        
+        # Build contact sensor body index mapping (sensor order -> robot body order).
+        self._contact_body_ids = None
+        try:
+            contact_ids = []
+            for name in self.body_names:
+                ids, _ = self.contact_sensor.find_bodies(name)
+                if len(ids) != 1:
+                    logger.warning(f"Contact sensor mapping for body '{name}' is ambiguous: {ids}")
+                    contact_ids.append(None)
+                else:
+                    contact_ids.append(ids[0])
+            if all(v is not None for v in contact_ids):
+                self._contact_body_ids = torch.tensor(contact_ids, dtype=torch.long, device=self.sim_device)
+            else:
+                logger.warning("Contact sensor body mapping incomplete; using raw contact force order.")
+        except Exception as e:
+            logger.warning(f"Failed to build contact sensor body mapping: {e}")
        
         
         # return self.num_dof, self.num_bodies, self.dof_names, self.body_names
@@ -659,7 +677,15 @@ class IsaacSim(BaseSimulator):
         self.dof_pos = self._robot.data.joint_pos[:, self.dof_ids] # (num_envs, num_dof)
         self.dof_vel = self._robot.data.joint_vel[:, self.dof_ids]
 
-        self.contact_forces = self.contact_sensor.data.net_forces_w # (num_envs, num_bodies, 3)
+        # Contact sensor order may differ from robot body order. Reorder to robot body order if mapping exists.
+        raw_contact_forces = self.contact_sensor.data.net_forces_w  # (num_envs, num_bodies, 3)
+        if self._contact_body_ids is not None:
+            contact_ids = self._contact_body_ids
+            if contact_ids.device != raw_contact_forces.device:
+                contact_ids = contact_ids.to(raw_contact_forces.device)
+            self.contact_forces = raw_contact_forces[:, contact_ids, :]
+        else:
+            self.contact_forces = raw_contact_forces
 
         self._rigid_body_pos = self._robot.data.body_pos_w[:, self.body_ids, :]
         self._rigid_body_rot = self._robot.data.body_quat_w[:, self.body_ids][:, :, [1, 2, 3, 0]] # (num_envs, 4) 3 isaacsim use wxyz, we keep xyzw for consistency

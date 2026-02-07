@@ -317,6 +317,9 @@ class LeggedRobotBase(BaseTask):
             else:
                 self.simulator.set_actor_root_state_tensor(refresh_env_ids, self.simulator.all_root_states)
             self.simulator.set_dof_state_tensor(refresh_env_ids, self.simulator.dof_state)
+            # Optional hook for env-specific debug after reset write.
+            if hasattr(self, "_debug_after_reset_write"):
+                self._debug_after_reset_write(refresh_env_ids)
             self.need_to_refresh_envs[refresh_env_ids] = False
             # if self.config.simulator.config.name == 'maniskill':
             #     self.simulator._env.scene._gpu_apply_all()
@@ -884,7 +887,7 @@ class LeggedRobotBase(BaseTask):
 
 
     def _push_robots(self, env_ids):
-        """ Random pushes the robots. Emulates an impulse by setting a randomized base velocity. 
+        """ Random pushes the robots. Emulates an impulse by adding a randomized base velocity delta.
         """
         if len(env_ids) == 0:
             return
@@ -902,9 +905,11 @@ class LeggedRobotBase(BaseTask):
         ang_z = torch_rand_float(ang_range["yaw"][0], ang_range["yaw"][1], (len(env_ids), 1), device=str(self.device))
 
         self.push_robot_vel_buf[env_ids] = torch.cat([lin_x, lin_y, lin_z, ang_x, ang_y, ang_z], dim=1)
+        # record the delta for debug drawing
         self.record_push_robot_vel_buf[env_ids] = self.push_robot_vel_buf[env_ids].clone()
-        self.simulator.robot_root_states[env_ids, 7:10] = self.push_robot_vel_buf[env_ids, :3]
-        self.simulator.robot_root_states[env_ids, 10:13] = self.push_robot_vel_buf[env_ids, 3:]
+        # add velocity delta instead of overwriting (match IsaacLab push_by_setting_velocity)
+        self.simulator.robot_root_states[env_ids, 7:10] += self.push_robot_vel_buf[env_ids, :3]
+        self.simulator.robot_root_states[env_ids, 10:13] += self.push_robot_vel_buf[env_ids, 3:]
         # self.gym.set_actor_root_state_tensor(self.sim, gymtorch.unwrap_tensor(self.simulator.all_root_states))
 
 
