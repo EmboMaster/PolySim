@@ -244,9 +244,12 @@ class EnvClient:
         all_info_keys = set(k for r in results_list if "info" in r and r["info"] for k in r["info"])
         
         for key in all_info_keys:
-            if key in ["episode", "to_log"]:
+            if key == "episode":
                 dicts = [r["info"][key] for r in results_list if "info" in r and key in r["info"]]
                 final_info[key] = self._weighted_merge_dicts(dicts)
+            elif key == "to_log":
+                dicts = [r["info"][key] for r in results_list if "info" in r and key in r["info"]]
+                final_info[key] = self._concat_merge_dicts(dicts)
             else:
                 values = [r["info"][key] for r in results_list if "info" in r and key in r["info"]]
                 tensors = [v.to(self.device) if torch.is_tensor(v) else torch.tensor(v, device=self.device) for v in values]
@@ -276,6 +279,28 @@ class EnvClient:
                 valid_weights = torch.stack(valid_weights)
                 valid_weights /= valid_weights.sum()
                 result[key] = (torch.stack(values) * valid_weights.unsqueeze(-1)).sum(dim=0)
+        return result
+
+    def _concat_merge_dicts(self, dicts: List[Dict]) -> Dict:
+        """Concatenate dict values across servers (used for per-env logging)."""
+        if not dicts:
+            return {}
+        if len(dicts) == 1:
+            return dicts[0]
+        result = {}
+        for key in {k for d in dicts for k in d}:
+            values = []
+            for d in dicts:
+                if key in d:
+                    v = d[key]
+                    if not torch.is_tensor(v):
+                        v = torch.tensor(v, device=self.device)
+                    v = v.to(self.device)
+                    if v.ndim == 0:
+                        v = v.unsqueeze(0)
+                    values.append(v)
+            if values:
+                result[key] = torch.cat(values, dim=0)
         return result
 
     def step(self, actor_state: Dict[str, Any]) -> tuple:

@@ -304,6 +304,12 @@ class LeggedRobotBase(BaseTask):
         self._compute_reward()
         # check terminations
         env_ids = self.reset_buf.nonzero(as_tuple=False).flatten()
+        # Success rate: episode ends without error (i.e., timeout-based termination).
+        # Only log when there are reset envs; avoid empty CUDA tensors in RPC payloads.
+        if len(env_ids) > 0:
+            self.log_dict["success_rate"] = self.time_out_buf[env_ids].float()
+        else:
+            self.log_dict.pop("success_rate", None)
         # print(f"reset length: {len(env_ids)}")
         self.reset_envs_idx(env_ids)
 
@@ -318,8 +324,8 @@ class LeggedRobotBase(BaseTask):
                 self.simulator.set_actor_root_state_tensor(refresh_env_ids, self.simulator.all_root_states)
             self.simulator.set_dof_state_tensor(refresh_env_ids, self.simulator.dof_state)
             # Optional hook for env-specific debug after reset write.
-            if hasattr(self, "_debug_after_reset_write"):
-                self._debug_after_reset_write(refresh_env_ids)
+            # if hasattr(self, "_debug_after_reset_write"):
+            #     self._debug_after_reset_write(refresh_env_ids)
             self.need_to_refresh_envs[refresh_env_ids] = False
             # if self.config.simulator.config.name == 'maniskill':
             #     self.simulator._env.scene._gpu_apply_all()
@@ -1026,4 +1032,6 @@ class LeggedRobotBase(BaseTask):
         return torch.cat(history_tensors, dim=1)
     
     def _get_obs_actions(self,):
-        return self.actions
+        # Return the actual command applied to the env (after delay) scaled by action_scale.
+        actions = self.actions_after_delay if hasattr(self, "actions_after_delay") else self.actions
+        return actions * self.action_scale

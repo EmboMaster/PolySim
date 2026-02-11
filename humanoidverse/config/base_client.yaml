@@ -10,8 +10,8 @@ max_episode_length : 1000
 max_episode_length_s : 20
 # 最小robot配置
 robot:
-  policy_obs_dim: 386
-  critic_obs_dim: 707  
+  policy_obs_dim: 124
+  critic_obs_dim: 373  
   actions_dim: 23
   foot_name: "foot"
   knee_name: "knee"
@@ -19,7 +19,7 @@ robot:
   terminate_after_contacts_on: []
   has_upper_body_dof: false
   has_torso: false
-  algo_obs_dim_dict: {'actor_obs': 386, 'critic_obs': 707}
+  algo_obs_dim_dict: {'actor_obs': 124, 'critic_obs': 373}
   
   init_state:
     pos: [0.0, 0.0, 1.0]

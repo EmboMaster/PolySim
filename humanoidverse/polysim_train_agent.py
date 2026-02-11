@@ -98,7 +98,8 @@ def create_env_client(master_port, simulator_lists, rank, world_size, num_envs_l
     try:
         # Create and return the EnvClient instance
         logger.info(f"[Client] Creating EnvClient on device {device_list[rank]}...")
-        env_client = EnvClient(config, device=device_list[rank])
+        # Ensure device is a torch-compatible string (e.g. "cuda:2") for map_location.
+        env_client = EnvClient(config, device=f"cuda:{device_list[rank]}")
         logger.info("[Client] EnvClient created successfully.")
         return env_client
     except Exception as e:

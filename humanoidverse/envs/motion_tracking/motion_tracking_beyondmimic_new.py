@@ -413,6 +413,9 @@ class LeggedRobotMotionTracking(LeggedRobotBase):
         ref_body_ang_vel_extend = motion_res["body_ang_vel_t"]
         ref_joint_pos = motion_res["dof_pos"]
         ref_joint_vel = motion_res["dof_vel"]
+        # Cache reference joint targets for observation use.
+        self.ref_joint_pos = ref_joint_pos
+        self.ref_joint_vel = ref_joint_vel
 
         # =================== EXTEND Rigid body computations (keep existing) ===================
         rotated_pos_in_parent = my_quat_rotate(
@@ -870,6 +873,15 @@ class LeggedRobotMotionTracking(LeggedRobotBase):
         return self.robot_anchor_ang_vel_w
 
 
+    def _get_obs_base_ang_vel(self):
+        """Robot root angular velocity in root (base) frame (body frame)."""
+        if hasattr(self, "base_ang_vel"):
+            return self.base_ang_vel
+        if hasattr(self.simulator, "base_quat") and hasattr(self.simulator, "robot_root_states"):
+            return quat_rotate_inverse(self.simulator.base_quat, self.simulator.robot_root_states[:, 10:13], w_last=True)
+        # return torch.zeros(self.num_envs, 3, device=self.device)
+
+
     def _get_obs_robot_body_pos_b(self):
         """Robot body positions in anchor (base) frame"""
         # Shape: [B, num_bodies, 3] -> [B, num_bodies*3]
@@ -985,6 +997,15 @@ class LeggedRobotMotionTracking(LeggedRobotBase):
             return self.simulator.dof_vel[:, self.non_wrist_joint_mask]
         else:
             return self.simulator.dof_vel
+
+    def _get_obs_generated_commands(self):
+        """Reference joint position and velocity from motion (concat)."""
+        if hasattr(self, "ref_joint_pos") and hasattr(self, "ref_joint_vel"):
+            return torch.cat([self.ref_joint_pos, self.ref_joint_vel], dim=1)
+        # Fallback: compute from motion library if cache missing.
+        motion_times = (self.episode_length_buf + 1) * self.dt + self.motion_start_times
+        motion_res = self._motion_lib.get_motion_state(self.motion_ids, motion_times, offset=self.env_origins)
+        return torch.cat([motion_res["dof_pos"], motion_res["dof_vel"]], dim=1)
 
     ###############################################################
 

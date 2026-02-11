@@ -12,7 +12,7 @@ env:
       terminate_by_contact: False
       terminate_by_gravity: False
       terminate_by_low_height: False
-      terminate_when_motion_end: False
+      terminate_when_motion_end: True
       terminate_when_motion_far: False
       terminate_when_close_to_dof_pos_limit: False
       terminate_when_close_to_dof_vel_limit: False

@@ -7,57 +7,26 @@ obs:
   obs_dict:
     actor_obs: [
       # Robot anchor (base) state in world frame
-      robot_anchor_ori_w,           # Base orientation (6D rotation matrix)
-      robot_anchor_ang_vel_w,       # Base angular velocity
-      projected_gravity,            # Keep for robot orientation awareness
-      
-      # Joint state (excluding wrists)
+      generated_commands,
+      motion_anchor_ori_b,
+      base_ang_vel,
       joint_pos_rel_wo_wrist,       # Joint positions without wrist joints
       joint_vel_rel_wo_wrist,       # Joint velocities without wrist joints
-      
-      # Actions
       actions,                      # Previous actions
-      
-      # Reference motion phase
-      ref_motion_phase,             # Phase of reference motion (0-1)
-      
-      # History
-      history_actor
     ]
 
     critic_obs: [
       # Robot anchor (base) state in world frame
-      robot_anchor_ori_w,           # Base orientation (6D rotation matrix)
-      robot_anchor_lin_vel_w,       # Base linear velocity
-      robot_anchor_ang_vel_w,       # Base angular velocity
-      projected_gravity,            # Keep for robot orientation awareness
-      
-      # Robot body state in anchor (base) frame
+      generated_commands,
+      motion_anchor_pos_b,
+      motion_anchor_ori_b,
       robot_body_pos_b,             # All body positions in base frame
       robot_body_ori_b,             # All body orientations in base frame (6D)
-      
-      # Joint state (excluding wrists)
-      joint_pos_rel_wo_wrist,       # Joint positions without wrist joints
-      joint_vel_rel_wo_wrist,       # Joint velocities without wrist joints
-      
-      # Actions
+      base_lin_vel,
+      base_ang_vel,
+      joint_pos_rel_wo_wrist,
+      joint_vel_rel_wo_wrist,
       actions,                      # Previous actions
-      
-      # Reference motion phase
-      ref_motion_phase,             # Phase of reference motion (0-1)
-      
-      # Reference motion anchor (base) in robot anchor frame
-      motion_anchor_pos_b,          # Reference base position in current base frame
-      motion_anchor_ori_b,          # Reference base orientation in current base frame (6D)
-      
-      # Reference motion wrists in robot anchor frame
-      motion_right_wrist_pos_b,     # Reference right wrist position in base frame
-      motion_left_wrist_pos_b,      # Reference left wrist position in base frame
-      motion_right_wrist_ori_b,     # Reference right wrist orientation in base frame (6D)
-      motion_left_wrist_ori_b,      # Reference left wrist orientation in base frame (6D)
-      
-      # History
-      history_critic
     ]
 
   obs_auxiliary: # define those compounds in obs_dict
@@ -87,9 +56,13 @@ obs:
   obs_scales: {
     # Robot anchor (base) state
     robot_anchor_ori_w: 1.0,
-    robot_anchor_lin_vel_w: 2.0,
-    robot_anchor_ang_vel_w: 0.25,
+    robot_anchor_lin_vel_w: 1.0,
+    robot_anchor_ang_vel_w: 1.0,
     projected_gravity: 1.0,
+
+    # Root state (body frame)
+    base_lin_vel: 1.0,
+    base_ang_vel: 1.0,
     
     # Robot body state in anchor frame
     robot_body_pos_b: 1.0,
@@ -97,10 +70,13 @@ obs:
     
     # Joint state
     joint_pos_rel_wo_wrist: 1.0,
-    joint_vel_rel_wo_wrist: 0.05,
+    joint_vel_rel_wo_wrist: 1.0,
     
     # Actions
     actions: 1.0,
+
+    # Generated commands (ref joint pos + vel)
+    generated_commands: 1.0,
     
     # Motion phase
     ref_motion_phase: 1.0,
@@ -125,7 +101,11 @@ obs:
     robot_anchor_ori_w: 0.05,
     robot_anchor_lin_vel_w: 0.5,
     robot_anchor_ang_vel_w: 0.2,
-    projected_gravity: 0.2,
+    projected_gravity: 0.05,
+
+    # Root state (body frame) - align with whole_body_tracking
+    base_lin_vel: 0.5,
+    base_ang_vel: 0.2,
     
     # Robot body state in anchor frame
     robot_body_pos_b: 0.0,
@@ -137,13 +117,16 @@ obs:
     
     # Actions
     actions: 0.0,
+
+    # Generated commands (ref joint pos + vel)
+    generated_commands: 0.0,
     
     # Motion phase
     ref_motion_phase: 0.0,
     
     # Motion anchor in robot frame
-    motion_anchor_pos_b: 0.0,
-    motion_anchor_ori_b: 0.0,
+    motion_anchor_pos_b: 0.25,
+    motion_anchor_ori_b: 0.05,
     
     # Motion wrists in robot frame
     motion_right_wrist_pos_b: 0.0,
@@ -175,15 +158,21 @@ obs:
     # Note: Adjust based on your robot config
     - robot_body_pos_b: ${eval:'3 * (${robot.num_bodies} + 3)'}  # 3 extended bodies hardcoded
     - robot_body_ori_b: ${eval:'6 * (${robot.num_bodies} + 3)'}  # 6D rotation per body
+
+    # Root state (body frame)
+    - base_lin_vel: 3
+    - base_ang_vel: 3
     
     # Joint state (excluding wrists)
-    # IMPORTANT: Adjust based on actual number of wrist joints in your robot
-    # If your robot has N total DOFs and M wrist DOFs:
-    - joint_pos_rel_wo_wrist: ${eval:'${robot.dof_obs_size}'}  # Assuming 2 wrist DOFs total (adjust if needed)
-    - joint_vel_rel_wo_wrist: ${eval:'${robot.dof_obs_size}'}  # Assuming 2 wrist DOFs total (adjust if needed)
+    # NOTE: dof_obs_size should already exclude wrist DOFs for motion tracking setups
+    - joint_pos_rel_wo_wrist: ${eval:'${robot.dof_obs_size}'}
+    - joint_vel_rel_wo_wrist: ${eval:'${robot.dof_obs_size}'}
     
     # Actions
     - actions: ${robot.dof_obs_size}
+
+    # Generated commands (ref joint pos + vel)
+    - generated_commands: ${eval:'2 * ${robot.dof_obs_size}'}
     
     # Motion phase
     - ref_motion_phase: 1                      # Scalar phase value
